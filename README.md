@@ -17,7 +17,7 @@ Install Erlang, Elixir and Node.js from OS packages or use
 [ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/).
 
 ```shell
-sudo bin/build-install-deps-ubuntu
+LANG=en_US.UTF-8 sudo bin/build-install-deps-ubuntu
 ```
 
 ## Build
@@ -53,9 +53,9 @@ Configure production database settings and `secret_key_base` in `config/prod.sec
 Copy the runtime config to `/etc`.
 
 ```shell
-sudo cp config/prod.secret.exs /etc/mix-deploy-example
-sudo chown deploy:app /etc/mix-deploy-example/config/config.exs
-sudo chmod 644 /etc/mix-deploy-example/config/config.exs
+sudo cp config/prod.secret.exs /etc/mix-deploy-example/config.exs
+sudo chown deploy:app /etc/mix-deploy-example/config.exs
+sudo chmod 644 /etc/mix-deploy-example/config.exs
 ```end
 
 ## Deploy
@@ -64,7 +64,7 @@ Deploy the release to the local machine:
 
 ```shell
 # Extract release to target directory, creating current symlink
-bin/deploy-release
+sudo bin/deploy-release
 
 # Restart the systemd unit
 sudo bin/deploy-restart
