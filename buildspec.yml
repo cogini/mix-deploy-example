@@ -1,0 +1,46 @@
+version: 0.2
+
+env:
+  variables:
+    MIX_ENV: "prod"
+
+# https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+phases:
+  install:
+    commands:
+      # - chmod +x bin/build
+      # Install Erlang, Elixir, Node.js via OS packages
+      - bin/build-install-deps-ubuntu
+      # Install using ASDF
+      # - bin/build-install-asdf-ubuntu
+      # - bin/build-init-asdf
+  pre_build:
+    commands:
+      # Install using ASDF
+      # - bin/build-install-asdf
+  build:
+    commands:
+      # Build the app
+      - bin/build
+  post_build:
+    commands:
+      # Stage build files for CodeDeploy
+      - bin/deploy-stage-files
+      # Sync static assets to S3 bucket for CloudFront
+      - bin/deploy-sync-assets-s3
+artifacts:
+  files:
+    - '**/*'
+  base-directory: files
+cache:
+  paths:
+    # deps
+    - 'deps/**/*'
+    # npm libraries for asset pipeline
+    - 'assets/node_modules/**/*'
+    # ASDF packages
+    # - '/root/.asdf/**/*'
+    # Node keys
+    # - '/root/.gpg/**/*'
+    # OS packages
+    # - '/var/cache/apt/archives/**/*'
