@@ -39,6 +39,10 @@ environment :prod do
   set include_src: false
   set cookie: :"pRlPiv!OOD6@zc(%Du^>T19IH]2NQA0}$f9q10E<>UZ`K!dk.G6/4HV]!>3mRi.k"
   set vm_args: "rel/vm.args"
+
+  set config_providers: [
+    {Mix.Releases.Config.Providers.Elixir, ["/etc/mix-deploy-example/config.exs"]}
+  ]
 end
 
 # You may define one or more releases in this file.
