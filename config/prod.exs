@@ -66,6 +66,14 @@ config :phoenix, :serve_endpoints, true
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
+config :mix_deploy,
+  app_user: "app",
+  app_group: "app"
+
+config :mix_systemd,
+  app_user: "app",
+  app_group: "app"
+
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
 # import_config "prod.secret.exs"
