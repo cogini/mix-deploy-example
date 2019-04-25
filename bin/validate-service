@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Timeout after 30s if we haven't gotten a response
+timeout 30s bash <<EOT
+# Wait until an HTTP request succeeds against localhost:PORT
+function check_health(){
+    while true; do
+        if curl --silent --show-error --fail --output /dev/null "http://localhost:4000/"; then
+            exit 0
+        fi
+        # sleep 1
+    done
+}
+
+check_health
+EOT
+
+# Try a specific number of times
+# counter=1
+# while !( $CURL_CMD ); do
+#   if [ $counter -lt 10 ]
+#   then  
+#     ((counter++))
+#     sleep 1
+#   else
+#     echo "false" >&2
+#     exit 1
+#   fi
+# done
+
+# Some useful options
+
+# Check for a specific HTTP response code
+# curl --silent --output /dev/null --write-out "%{http_code}" $URL | grep "302"
+
+# Check for a specific field in the data
+# curl http://localhost:8092/home/ping | grep "ok"
+
+# Specify the host on the request
+# -H "Host: ${DOMAIN}"
+
+# Say that the request came via HTTPS
+# -H "X-Forwarded-Proto: https"
+
+# Don't try to validate SSL
+# --insecure
+
+# /bin/systemctl -q is-active foo
