@@ -1,0 +1,51 @@
+version: 0.0
+os: linux
+files:
+  - source: bin
+    destination: /srv/mix-deploy-example/bin
+  - source: systemd
+    destination: /lib/systemd/system
+# https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-permissions.html
+# permissions:
+#   - object: /srv/mix--deploy-example
+#     owner: deploy
+#     group: app
+#     mode: 750
+#     type:
+#       - directory
+#   - object: /srv/mix-deploy-example/bin
+#     owner: deploy
+#     group: app
+#     mode: 750
+#     type:
+#       - file
+# permissions:
+#   - object: /srv/mix-deploy-example/current
+#     owner: deploy
+#     group: app
+#    context:
+#      user: unconfined_u
+#      type: httpd_sys_content_t
+#      range: s0
+# https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html
+hooks:
+  ApplicationStop:
+    - location: bin/deploy-stop
+      timeout: 300
+  BeforeInstall:
+    - location: bin/deploy-create-users
+    - location: bin/deploy-create-dirs
+    - location: bin/deploy-clean-target
+  AfterInstall:
+    - location: bin/deploy-extract-release
+    - location: bin/deploy-set-perms
+    - location: bin/deploy-enable
+  ApplicationStart:
+    # - location: bin/deploy-migrate
+    #   runas: app
+    #   timeout: 300
+    - location: bin/deploy-start
+      timeout: 3600
+  ValidateService:
+    - location: bin/validate-service
+      timeout: 3600
