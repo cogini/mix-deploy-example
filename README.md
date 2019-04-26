@@ -22,13 +22,15 @@ sudo bin/build-install-deps-ubuntu
 
 ## Build
 
-Build the app as usual and make a release:
+Build the app and make a release:
 
 ```shell
 bin/build
 ```
 
-## Set up the local system, creating users, directories, etc
+## Initialize local system
+
+Run this once to set up the system, creating users, directories, etc:
 
 ```shell
 sudo bin/deploy-init-local
