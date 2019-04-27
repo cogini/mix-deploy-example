@@ -1,13 +1,12 @@
 # mix_deploy_example
 
 This is a working example Elixir app which shows how to deploy using
-[mix_deploy](https://github.com/cogini/mix_deploy).
+[mix_deploy](https://github.com/cogini/mix_deploy) to a local system and via
+[AWS CodeDeploy](https://aws.amazon.com/codedeploy/).
 
 `mix_deploy` generates scripts which are used to deploy your app using systemd
 on a server. It includes scripts to set up the initial system, deploy
 code and handle configuration during startup.
-
-It supports deployment to a local system and via [AWS CodeDeploy](https://aws.amazon.com/codedeploy/).
 
 # Running
 
@@ -30,7 +29,8 @@ bin/build
 
 ## Initialize local system
 
-Run this once to set up the system, creating users, directories, etc:
+Run this once to set up the system for the app, creating users, directories,
+etc:
 
 ```shell
 sudo bin/deploy-init-local
@@ -38,19 +38,23 @@ sudo bin/deploy-init-local
 
 ## Configure
 
+We keep secrets like database passwords and environment specific configuration
+like server hostnames separate from the releaese, stored in a file in the OS standard
+config directory, `/etc/mix-deploy-example`.
+
 Copy the sample production config:
 
 ```shell
 cp config/prod.secret.exs.sample config/prod.secret.exs
 ```
 
-The `secret_key_base` value protects Phoenix sessions. Generate your own value with:
+Edit `config/prod.secret.exs`, configuring production database settings and `secret_key_base`.
+
+Generate `secret_key_base` like this:
 
 ```shell
 mix phx.gen.secret 64
 ```
-
-Configure production database settings and `secret_key_base` in `config/prod.secret.exs`.
 
 Copy the runtime config to `/etc`.
 
@@ -78,7 +82,7 @@ sudo bin/deploy-restart
 Connect to your server:
 
 ```shell
-curl -http://localhost:4000/
+curl -v http://localhost:4000/
 ```
 
 You can roll back the release with the following:
