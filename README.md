@@ -68,6 +68,9 @@ Deploy the release to the local machine:
 # Extract release to target directory, creating current symlink
 bin/deploy-release
 
+# Run database migrations
+bin/deploy-migrate
+
 # Restart the systemd unit
 sudo bin/deploy-restart
 ```
@@ -199,3 +202,18 @@ config :mix_systemd,
 ## Configure for CodeBuild
 
 * Add `buildspec.yml`
+
+## Add Distillery command for database migrations
+
+* Add lib/mix_deploy_example/tasks/migrate.ex
+* Add `rel/commands/migrate.sh`.
+
+In `rel/config.exs`:
+
+```elixir
+environment :prod do
+  set commands: [
+    migrate: "rel/commands/migrate.sh"
+  ]
+end
+```
