@@ -8,6 +8,9 @@ This is a working example Elixir app which shows how to deploy using
 on a server. It includes scripts to set up the initial system, deploy
 code and handle configuration during startup.
 
+It uses [mix_systemd](https://github.com/cogini/mix_systemd) to generate a corresponding
+systemd unit file.
+
 # Running
 
 ## Install build dependencies
@@ -39,7 +42,7 @@ sudo bin/deploy-init-local
 ## Configure
 
 We keep secrets like database passwords and environment specific configuration
-like server hostnames separate from the releaese, stored in a file in the OS standard
+like server hostnames separate from the release, stored in a file in the OS standard
 config directory, `/etc/mix-deploy-example`.
 
 Copy the sample production config:
@@ -127,7 +130,7 @@ Add `rel` dir to git.
 
 ## Configure release
 
-Increase network ports in `rel/vm.args`
+[Increase network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app) in `rel/vm.args`.
 
 Add runtime config provider to `rel/config.exs`:
 
@@ -143,14 +146,20 @@ Add `config/prod.secret.exs.sample` file.
 
 ## Add mix_deploy and mix_systemd
 
-Add libraries to deps:
+Add libraries to deps from Hex:
+
+```elixir
+{:mix_systemd, "~> 0.1.0"},
+{:mix_deploy, "~> 0.1.0"}
+```
+
+Or from GitHub:
 
 ```elixir
 {:mix_systemd, github: "cogini/mix_systemd", override: true},
 {:mix_deploy, github: "cogini/mix_deploy"},
 end
 ```
-TODO: should use hex versions
 
 Add `rel/templates` and `bin/deploy-*` to `.gitignore`.
 
@@ -174,16 +183,25 @@ Add `rel/templates` and `bin/deploy-*` to `.gitignore`.
 Update `config/prod.exs` to run from release:
 
 * Start Phoenix endpoints
-* Don't use use prod.secret.exs
+
+```elixir
+config :phoenix, :serve_endpoints, true
+```
+
+* Don't import `prod.secret.exs`
+
+```elixir
+`# import_config "prod.secret.exs"`
+```
 
 ## Configure mix_deploy and mix_systemd
 
-Configure `mix_deploy` and `mix_systemd`. If you are deploying on the
-local system, then it will work without any configuration.
+Configure `mix_deploy` and `mix_systemd`. If you are deploying on the local
+system, then it will work without any configuration.
 
-By default, it runs the app under an OS user matching the application,
-e.g. `mix-deploy-example`, which is a bit long, so
-change `config/prod.exs` to use `app` for the OS user:
+By default, it runs the app under an OS user matching the application, e.g.
+`mix-deploy-example`, which is a bit long, so change `config/prod.exs` to use
+`app` as the name of the OS user:
 
 ```elixir
 config :mix_deploy,
@@ -207,9 +225,11 @@ config :mix_systemd,
 
 * Add `buildspec.yml`
 
-## Add Distillery command for database migrations
+## Add database migrations
 
-* Add lib/mix_deploy_example/tasks/migrate.ex
+Add a [Distillery custom command to run database migrations](https://www.cogini.com/blog/running-ecto-migrations-in-production-releases-with-distillery-custom-commands/)
+
+* Add `lib/mix_deploy_example/tasks/migrate.ex`
 * Add `rel/commands/migrate.sh`.
 
 In `rel/config.exs`:
