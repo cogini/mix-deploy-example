@@ -41,9 +41,9 @@ sudo bin/deploy-init-local
 
 ## Configure
 
-We keep secrets like database passwords and environment specific configuration
-like server hostnames separate from the release, stored in a file in the OS standard
-config directory, `/etc/mix-deploy-example`.
+We keep secrets like database passwords and environment-specific configuration
+like database host separate from the release, stored in a file in the OS
+standard config directory for apps, under `/etc`.
 
 Copy the sample production config:
 
@@ -82,13 +82,20 @@ bin/deploy-migrate
 sudo bin/deploy-restart
 ```
 
-Connect to your server:
+Make a request to the server:
 
 ```shell
 curl -v http://localhost:4000/
 ```
 
-You can roll back the release with the following:
+Open a console on the running release:
+
+```shell
+sudo -i -u app /srv/mix-deploy-example/bin/deploy-remote-console
+```
+
+If things aren't working right with the release, roll back to the previous
+release with the following:
 
 ```shell
 bin/deploy-rollback
@@ -130,7 +137,7 @@ Add `rel` dir to git.
 
 ## Configure release
 
-[Increase network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app) in `rel/vm.args`.
+[Increase network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app/) in `rel/vm.args`.
 
 Add runtime config provider to `rel/config.exs`:
 
