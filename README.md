@@ -65,7 +65,7 @@ Copy the runtime config to `/etc`.
 cp config/prod.secret.exs /etc/mix-deploy-example/config.exs
 chown deploy:app /etc/mix-deploy-example/config.exs
 chmod 644 /etc/mix-deploy-example/config.exs
-```end
+```
 
 ## Deploy
 
@@ -88,7 +88,7 @@ Make a request to the server:
 curl -v http://localhost:4000/
 ```
 
-Open a console on the running release:
+To open a console on the running release:
 
 ```shell
 sudo -i -u app /srv/mix-deploy-example/bin/deploy-remote-console
@@ -102,7 +102,7 @@ bin/deploy-rollback
 sudo bin/deploy-restart
 ```
 
-# Changes
+# Preparing an existing project for deployment
 
 Following are the steps used to set up this repo. You can do the same to add
 it to your own project. This repo is built as a series of git commits, so you
@@ -116,10 +116,10 @@ mix deps.get
 cd assets && npm install && node node_modules/webpack/bin/webpack.js --mode development
 ```
 
-* Add `mix.lock` to git
-* Add `package-lock.json` to git
+- Add `mix.lock` to git
+- Add `package-lock.json` to git
 
-## Set up distillery
+## Install and configure Distillery
 
 Add library to deps:
 
@@ -151,7 +151,7 @@ end
 
 Add `config/prod.secret.exs.sample` file.
 
-## Add mix_deploy and mix_systemd
+## Install mix_deploy and mix_systemd
 
 Add libraries to deps from Hex:
 
@@ -170,32 +170,36 @@ end
 
 Add `rel/templates` and `bin/deploy-*` to `.gitignore`.
 
-## Add build scripts
+## Copy build and utility scripts
 
-* `build`
-* `build-install-asdf`
-* `build-install-asdf-deps-centos`
-* `build-install-asdf-deps-ubuntu`
-* `build-install-asdf-init`
-* `build-install-asdf-macos`
-* `build-install-deps-centos`
-* `build-install-deps-ubuntu`
+Copy these scripts from the `bin/` directory to the `bin/` directory of your project.
 
-## Add script to validate service is working
+These scripts build your release or install the required dependencies:
 
-`bin/validate-service`
+- `build`
+- `build-install-asdf`
+- `build-install-asdf-deps-centos`
+- `build-install-asdf-deps-ubuntu`
+- `build-install-asdf-init`
+- `build-install-asdf-macos`
+- `build-install-deps-centos`
+- `build-install-deps-ubuntu`
 
-## Configure system
+This script verifies that your application is running correctly:
+
+- `bin/validate-service`
+
+## Configure Phoenix for OTP releases
 
 Update `config/prod.exs` to run from release:
 
-* Start Phoenix endpoints
+- Start Phoenix endpoints
 
 ```elixir
 config :phoenix, :serve_endpoints, true
 ```
 
-* Don't import `prod.secret.exs`
+- Don't import `prod.secret.exs`
 
 ```elixir
 `# import_config "prod.secret.exs"`
@@ -222,22 +226,29 @@ config :mix_systemd,
 
 ## Configure ASDF
 
-* Add `.tool-versions`
+Create a `.tool-versions` file in the root of your project, describing the versions
+of OTP, Elixir, and Node that you will be building with:
+
+```
+erlang 21.3
+elixir 1.8.2
+nodejs 10.16.0
+```
 
 ## Configure for CodeDeploy
 
-* Add `appspec.yml`
+- Add `appspec.yml`
 
 ## Configure for CodeBuild
 
-* Add `buildspec.yml`
+- Add `buildspec.yml`
 
 ## Add database migrations
 
 Add a [Distillery custom command to run database migrations](https://www.cogini.com/blog/running-ecto-migrations-in-production-releases-with-distillery-custom-commands/)
 
-* Add `lib/mix_deploy_example/tasks/migrate.ex`
-* Add `rel/commands/migrate.sh`.
+- Add `lib/mix_deploy_example/tasks/migrate.ex`
+- Add `rel/commands/migrate.sh`.
 
 In `rel/config.exs`:
 
