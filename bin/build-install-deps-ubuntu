@@ -47,7 +47,7 @@ apt-get -qq install procps libc6 libncurses5 libssl1.0 libgcc1 libstdc++6 libsct
 apt-get -f install
 
 echo "===> Installing Erlang"
-wget --no-verbose -P /tmp/ "http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_${ERL_VERSION}-1~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
+wget --no-verbose -P /tmp/ "https://packages.erlang-solutions.com/erlang/debian/pool/esl-erlang_${ERL_VERSION}-1~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
 dpkg -i "/tmp/esl-erlang_${ERL_VERSION}-1~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
 
 echo "===> Installing Elixir ${ELIXIR_VERSION}"
