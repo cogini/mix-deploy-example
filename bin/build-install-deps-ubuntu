@@ -9,7 +9,7 @@ set -e
 # In order to make things more predictable, install specific versions of
 # Erlang and Elixir rather than just taking the latest available
 ERL_VERSION="${ERL_VERSION:-21.3}"
-ELIXIR_VERSION="${ELIXIR_VERSION:-1.8.1}"
+ELIXIR_VERSION="${ELIXIR_VERSION:-1.8.2}"
 
 # Make sure we have a good LANG
 export LANG="${LANG:-en_US.UTF-8}"
@@ -47,7 +47,7 @@ apt-get -qq install procps libc6 libncurses5 libssl1.0 libgcc1 libstdc++6 libsct
 apt-get -f install
 
 echo "===> Installing Erlang"
-wget --no-verbose -P /tmp/ "http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_${ERL_VERSION}-1~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
+wget --no-verbose -P /tmp/ "https://packages.erlang-solutions.com/erlang/debian/pool/esl-erlang_${ERL_VERSION}-1~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
 dpkg -i "/tmp/esl-erlang_${ERL_VERSION}-1~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
 
 echo "===> Installing Elixir ${ELIXIR_VERSION}"
