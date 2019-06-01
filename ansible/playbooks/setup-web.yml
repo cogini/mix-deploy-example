@@ -1,0 +1,25 @@
+# Web system setup
+#
+# ansible-playbook -u $USER -v -l web-servers playbooks/setup-web.yml -D
+
+# - name: Bootstrap Python 2
+#   hosts: debian-servers
+#   gather_facts: false
+#   become: true
+#   pre_tasks:
+#     - name: Install python 2
+#       raw: test -e /usr/bin/python2 || (apt -y update && apt install -y python)
+
+- name: Manage users
+  hosts: '*'
+  become: true
+  roles:
+    - cogini.users
+
+- name: Install common
+  hosts: '*'
+  become: true
+  roles:
+    - common-minimal
+    - iptables
+    - iptables-http

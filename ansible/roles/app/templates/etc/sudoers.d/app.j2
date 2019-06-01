@@ -1,0 +1,3 @@
+# {{ ansible_managed }}
+{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start {{ app_name }}, /bin/systemctl stop {{ app_name }}, /bin/systemctl restart {{ app_name }}, /bin/systemctl status {{ app_name }}
+Defaults:{{ deploy_user }} !requiretty

@@ -1,0 +1,18 @@
+asdf_optional_dependencies:
+  # Erlang
+  - automake
+  - autoconf
+  - build-essential
+  - libreadline-dev
+  - libncurses-dev
+  - libssl-dev
+  - libyaml-dev
+  - libxslt-dev
+  - libffi-dev
+  - libtool
+  - unzip
+  - dirmngr
+
+ansible_build_deps:
+  - python3-pip
+  # - python-pip

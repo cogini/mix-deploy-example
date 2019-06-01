@@ -1,0 +1,31 @@
+---
+# tasks file for app/setup
+#
+# These tasks set up the target system for the app, creating directories, etc.
+# Run them from a user with sudo permissions.
+
+- name: Create deploy dirs
+  file: path={{ item }} state=directory owner={{ deploy_user }} group={{ app_group }} mode=0750
+  with_items: "{{ deploy_dirs }}"
+
+- name: Create app dirs
+  file: path={{ item }} state=directory owner={{ app_user }} group={{ app_group }} mode=0750
+  with_items: "{{ app_dirs }}"
+
+- name: Create app flag dir
+  file: path={{ app_shutdown_flag_dir }} state=directory owner={{ deploy_user }} group={{ app_group }} mode=0770
+  when: "app_restart_method == 'touch'"
+
+- name: Create sudoers config for deploy user
+  template: src=etc/sudoers.d/app.j2 dest=/etc/sudoers.d/{{ deploy_user }}-{{ app_name }} owner=root group=root mode=0600
+  when: "app_restart_method == 'systemctl'"
+
+- name: Create systemd unit
+  template: src=lib/systemd/system/app.service.j2 dest=/lib/systemd/system/{{ app_name }}.service owner=root group=root mode=0644
+  notify: systemctl daemon-reload
+  when: "ansible_service_mgr == 'systemd' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
+
+- name: Enable service
+  service: name={{ app_name }} enabled=yes
+  environment:
+    PATH: /sbin:{{ ansible_env.PATH }}

@@ -1,0 +1,34 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description={{ app_name }} server
+After=local-fs.target network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ deploy_dir }}/current
+ExecStart={{ deploy_dir }}/current/bin/{{ app_name_code }} foreground
+ExecStop={{ deploy_dir }}/current/bin/{{ app_name_code }} stop
+Environment=LANG=en_US.UTF-8
+Environment=MIX_ENV={{ app_env }}
+Environment=RELEASE_MUTABLE_DIR={{ temp_dir }}
+Environment=PORT={{ app_http_listen_port }}
+# Environment=RUNNER_LOG_DIR={{ log_dir }}
+# systemd ignores /etc/security/limits
+LimitNOFILE=65536
+UMask=0027
+SyslogIdentifier={{ app_name }}
+Restart=always
+RestartSec=5
+# KillMode=process # default control-group
+# TimeoutSec=10
+# RemainAfterExit=no
+# https://elixirforum.com/t/distillery-node-is-not-running-and-non-zero-exit-code/3834
+# SuccessExitStatus=143
+
+# From distillery https://hexdocs.pm/distillery/use-with-systemd.html
+
+[Install]
+WantedBy=multi-user.target

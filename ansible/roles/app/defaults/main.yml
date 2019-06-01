@@ -1,0 +1,74 @@
+---
+# A unique prefix for our directories
+# This could be your organization or the overall project
+org: myorg
+
+# The external name of the app, used to name directories and the systemd process
+app_name: deploy-template
+# The internal "Elixir" name of the app, used to by Distillery to name directories
+app_name_code: deploy_template
+# Version of the app in the release
+# app_version: "0.1.0"
+# App environment
+app_env: prod
+
+# HTTP listen port
+app_http_listen_port: 4001
+
+# Redirect port 80 to app_http_listen_port
+app_redirect_http: true
+
+# Whether to rate limit inbound HTTP connections
+app_iptables_rate_limit_http: false
+
+# OS user that deploys / owns the release files
+deploy_user: deploy
+# OS group that deploys / owns the release files
+deploy_group: "{{ deploy_user }}"
+
+# OS user that the app runs under
+app_user: foo
+# OS group that the app runs under
+app_group: "{{ app_user }}"
+
+# Location of per-machine config files
+conf_dir: /etc/{{ app_name }}
+
+# Location of runtime logs
+log_dir: /var/log/{{ app_name }}
+
+# Base directory for deploy files
+deploy_dir: /opt/{{ org }}/{{ app_name }}
+releases_dir: "{{ deploy_dir }}/releases"
+
+# Location of runtime scripts, e.g. used in cron jobs
+scripts_dir: "{{ deploy_dir }}/scripts"
+
+# Location for app temp files
+temp_dir: /var/tmp/{{ org }}/{{ app_name }}
+
+# Base directory for app data
+var_dir: /var/{{ org }}/{{ app_name }}
+
+# Location of app data files
+data_dir: "{{ var_dir }}/data"
+
+# Dirs owned by the deploy user
+deploy_dirs:
+  - "{{ deploy_dir }}"
+  - "{{ releases_dir }}"
+  - "{{ conf_dir }}"
+  #- "{{ scripts_dir }}"
+
+# Dirs owned by the app user
+app_dirs:
+  - "{{ log_dir }}"
+  - "{{ temp_dir }}"
+  # - "{{ var_dir }}"
+  # - "{{ data_dir }}"
+
+app_shutdown_flag_dir: "/var/tmp/deploy/{{ app_name }}"
+app_shutdown_flag_file: "{{ app_shutdown_flag_dir }}/shutdown.flag"
+
+app_restart_method: systemctl
+# app_restart_method: touch

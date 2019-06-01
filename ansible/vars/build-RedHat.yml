@@ -1,0 +1,21 @@
+asdf_optional_dependencies:
+  # Erlang
+  - gcc
+  - glibc-devel
+  - make
+  - ncurses-devel
+  - openssl-devel
+  - autoconf
+  - pam-devel
+  - perl
+
+  # Node.js
+  - gpg
+  - perl-Digest-SHA
+
+ansible_build_deps:
+  # Build deps for ansible
+  - python-devel
+  - python-pip
+  - libffi-devel
+  - openssl-devel

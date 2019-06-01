@@ -1,0 +1,14 @@
+---
+# Set up database
+# ansible-playbook -u $USER -v -l db-servers playbooks/setup-db.yml -D
+
+- name: Install postgresql
+  hosts: '*'
+  become: true
+  pre_tasks:
+    - name: Set db_password
+      set_fact:
+        db_pass: "{{ lookup('password', '/tmp/db_password.txt length=16') }}"
+      when: db_password is not defined
+  roles:
+    - ANXS.postgresql

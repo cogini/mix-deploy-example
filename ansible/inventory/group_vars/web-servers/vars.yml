@@ -1,0 +1,27 @@
+# Vars for web-servers group
+
+# OS user account that the app runs under
+users_app_user: "{{ elixir_release_app_user }}"
+users_app_group: "{{ elixir_release_app_user }}"
+
+# OS user account used to deploy the app
+users_deploy_user: "{{ elixir_release_deploy_user }}"
+users_deploy_group: "{{ elixir_release_deploy_user }}"
+
+# Define secondary groups for the deploy user
+users_deploy_groups:
+  # Allow app group to read files
+  - "{{ users_app_group }}"
+  # Allow deploy user to look at system logs with journalctl (optional)
+  - systemd-journal
+
+# Users who can ssh into the deploy account
+# This is needed to run the build and deploy scripts
+users_deploy_users: "{{ users_global_admin_users }}"
+
+# Users who can ssh into the app account
+# This is not strictly needed, but can be useful for devs
+#
+# users_app_users: "{{ users_global_admin_users }}"
+# users_app_users:
+#   - jake

@@ -1,0 +1,11 @@
+# [web-servers]
+web-server
+
+# [build-servers]
+build-server
+
+# [db-servers]
+db-server
+
+[local]
+localhost ansible_sudo=false
