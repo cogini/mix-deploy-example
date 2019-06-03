@@ -261,3 +261,9 @@ end
 ```
 
 ## Add Ansible scripts
+
+## Add Docker file
+
+```shell
+build -f docker/Dockerfile.build .
+```
