@@ -2,9 +2,9 @@
 # tasks file for cronic
 
 # Install cronic
-- name: create /opt/bin
+- name: Create /opt/bin
   file: path=/opt/bin state=directory mode=0755 owner=root
 
 # http://habilis.net/cronic
-- name: install cronic
+- name: Install cronic
   copy: src=opt/bin/cronic dest={{ cronic_install_dir }}/cronic owner=root group=root mode=0755

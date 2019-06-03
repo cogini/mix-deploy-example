@@ -1,10 +1,10 @@
-# [web-servers]
+[web_servers]
 web-server
 
-# [build-servers]
+[build_servers]
 build-server
 
-# [db-servers]
+[db_servers]
 db-server
 
 [local]

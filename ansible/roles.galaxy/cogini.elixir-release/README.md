@@ -5,29 +5,24 @@ It uses Erlang "releases" with systemd for process supervision.
 
 ## Directory structure
 
-We use a structure like Capistrano to manage the release files.
-We create a base directory named for the organization and app:
-
-    /opt/myorg/foo
-
-Unpack the release files to a directory under `releases`, named with a timestamp:
-
-    /opt/myorg/foo/releases/20171114T072116
-
-Then make a symlink from `/opt/myorg/foo/current` to the currently running release.
+It uses a structure like Capistrano to manage the release files.  The base
+directory is named for the app, e.g. `/srv/foo`.  Under that, it creates a
+`releases` directory.  When deploying a release, it creates a directory under
+`releases` named by a timestamp, e.g. `/srv/foo/releases/20190603T072116`.  It
+then makes a `/srv/foo/current` to the new directory and restarts the app.
 
 ## Restarting
 
-After we have deployed the new release, we restart the app to make it live:
+After deploying the release, we restart the app to make it live:
 
 ```shell
 sudo /bin/systemctl restart foo
 ```
 
-The deploy user account needs sufficient permissions to restart the app, though.
-Instead of giving the deploy account full sudo permissions, a user-specific
-sudo config file specifies what commands it can run,
-e.g. `/etc/sudoers.d/deploy-foo`:
+The deploy user account needs sufficient permissions to restart the app.
+Instead of giving the deploy account full sudo permissions, a
+user-specific sudo config file specifies what commands it can run, e.g.
+`/etc/sudoers.d/deploy-foo`:
 
     deploy ALL=(ALL) NOPASSWD: /bin/systemctl start foo, /bin/systemctl stop foo, /bin/systemctl restart foo
 
@@ -75,7 +70,7 @@ App environment
 
 HTTP listen port. This is the port that Phoenix listens on.
 
-    elixir_release_http_listen_port: 4001
+    elixir_release_http_listen_port: 4000
 
 OS user that deploys / owns the release files
 

@@ -12,6 +12,9 @@
   become: true
   gather_facts: true
   no_log: true
+  vars:
+    elixir_release_app_name: mix_deploy_example
+    elixir_release_app_module: "{{ elixir_release_app_name.split('_') | capitalize | join('') }}"
   tasks:
     - name: Set secret_key_base
       set_fact:

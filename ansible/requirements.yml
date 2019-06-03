@@ -1,17 +1,21 @@
-# install_roles.yml
+# requirements.yml
 
 # Install roles from Ansible galaxy (https://galaxy.ansible.com/)
 # to the project roles.galaxy directory.
 #
-# ansible-galaxy install --roles-path roles.galaxy -r install_roles.yml
+# ansible-galaxy install --roles-path roles.galaxy -r requirements.yml
 #
 # We usually check in the downloaded roles to source control in the project
 # to snapshot a working version.
 
-- src: cogini.users
-- src: cogini.elixir-release
+# - src: cogini.users
+- src: https://github.com/cogini/ansible-role-users
+  name: cogini.users
+# - src: cogini.elixir-release
+- src: https://github.com/cogini/ansible-role-elixir-release
+  name: cogini.elixir-release
+  # version: master
 - src: ANXS.postgresql
-
 
 # iibrary/iptables_raw.py comes from
 # https://github.com/Nordeus/ansible_iptables_raw

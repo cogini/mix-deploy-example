@@ -4,11 +4,12 @@
 # Rate limit inbound ICMP (ping, etc)
 iptables_icmp_input_rate_limit_enabled: false
 
-iptables_ssh_rate_limit: false
-sshd_alt_port: 1022
+# Ports that the firewall opens for SSH
+# If you are running ssh on a non-standard port, add it to the list here
 iptables_ssh_ports:
   - 22
-  - '{{ sshd_alt_port }}'
+# Whether to rate limit requests on the ssh ports
+iptables_ssh_rate_limit: false
 
 # Default head rules when policy = ACCEPT
 # iptables_default_head: |

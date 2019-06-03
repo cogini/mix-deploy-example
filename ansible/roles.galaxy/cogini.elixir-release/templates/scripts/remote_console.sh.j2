@@ -15,10 +15,10 @@ BASEDIR="$BINDIR/.."
 cd "$BASEDIR/current"
 
 export MIX_ENV="{{ elixir_release_mix_env }}"
-export RELEASE_MUTABLE_DIR="{{ elixir_release_temp_dir }}"
+export RELEASE_MUTABLE_DIR="{{ elixir_release_runtime_dir }}"
 
-{% if elixir_release_conform_conf_path is defined %}
+{% if elixir_release_conform %}
 export CONFORM_CONF_PATH="{{ elixir_release_conform_conf_path }}"
 {% endif %}
 
-"{{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_name_code }}" remote_console
+"{{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_app_name }}" remote_console

@@ -3,7 +3,7 @@
 
 - block:
 
-  - name: install epel
+  - name: Install EPEL repo
     # yum: name=epel-release state=present
     yum: name=epel-release state=present update_cache=yes
 

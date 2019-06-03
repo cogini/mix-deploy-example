@@ -1,27 +1,44 @@
 # {{ ansible_managed }}
 
 [Unit]
-Description={{ elixir_release_name }} server
+Description={{ elixir_release_app_name }} server
 After=local-fs.target network.target
 
+# https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 [Service]
-Type=simple
+Type={{ elixir_release_service_type }}
 User={{ elixir_release_app_user }}
 Group={{ elixir_release_app_group }}
-WorkingDirectory={{ elixir_release_deploy_dir }}/current
-ExecStart={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_name_code }} foreground
-ExecStop={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_name_code }} stop
-Environment=LANG=en_US.UTF-8
+WorkingDirectory={{ elixir_release_deploy_dir }}
+{% for command in elixir_release_exec_start_pre %}
+ExecStartPre={{ command }}
+{% endfor %}
+ExecStart={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_app_name }} {{ elixir_release_start_command }}
+ExecStop={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_app_name }} stop
+Environment=LANG={{ elixir_release_lang }}
 Environment=MIX_ENV={{ elixir_release_mix_env }}
-Environment=RELEASE_MUTABLE_DIR={{ elixir_release_temp_dir }}
+Environment=RELEASE_MUTABLE_DIR={{ elixir_release_runtime_dir }}
 Environment=PORT={{ elixir_release_http_listen_port }}
-{% if elixir_release_conform_conf_path is defined %}
+{% if elixir_release_conform %}
 Environment=CONFORM_CONF_PATH={{ elixir_release_conform_conf_path }}
+{% endif %}
+{% for env in elixir_release_env_vars %}
+Environment={{ env }}
+{% endfor %}
+EnvironmentFile=-{{ elixir_release_current_dir }}/etc/environment
+EnvironmentFile=-{{ elixir_release_deploy_dir }}/etc/environment
+{% if 'configuration' in dirs %}
+EnvironmentFile=-{{ elixir_release_configuration_dir }}/environment
+{% endif %}
+EnvironmentFile=-{{ elixir_release_runtime_dir }}/runtime-environment
+{% if elixir_release_service_type == 'forking' %}
+Environment=PIDFILE={{ elixir_release_pid_file }}
+PIDFile={{ elixir_release_pid_file }}
 {% endif %}
 # systemd ignores /etc/security/limits
 LimitNOFILE={{ elixir_release_limit_nofile }}
-UMask=0027
-SyslogIdentifier={{ elixir_release_name }}
+UMask={{ elixir_release_umask }}
+SyslogIdentifier={{ elixir_release_service_name }}
 Restart=always
 RestartSec={{ elixir_release_systemd_restart_sec }}
 # KillMode=process # default control-group
@@ -29,6 +46,32 @@ RestartSec={{ elixir_release_systemd_restart_sec }}
 # RemainAfterExit=no
 # https://elixirforum.com/t/distillery-node-is-not-running-and-non-zero-exit-code/3834
 # SuccessExitStatus=143
+
+{% if 'runtime' in elixir_release_app_dirs %}
+RuntimeDirectory={{ elixir_release_runtime_directory }}
+RuntimeDirectoryMode={{ elixir_release_runtime_directory_mode }} TODO: convert to string
+{% if elixir_release_systemd_version >= 235 %}
+RuntimeDirectoryPreserve={{ elixir_release_runtime_directory_preserve }}
+{% endif %}
+{% endif %}
+{% if elixir_release_systemd_version >= 235 %}
+{% if 'configuration' in elixir_release_app_dirs %}
+ConfigurationDirectory={{ elixir_release_configuration_directory }}
+ConfigurationDirectoryMode={{ elixir_release_configuration_directory_mode }}
+{% endif %}
+{% if 'logs' in elixir_release_app_dirs %}
+LogsDirectory={{ elixir_release_logs_directory }}
+LogsDirectoryMode={{ elixir_release_logs_directory_mode }}
+{% endif %}
+{% if 'state' in elixir_release_app_dirs %}
+StateDirectory={{ elixir_release_state_directory }}
+StateDirectoryMode={{ elixir_release_state_directory_mode }}
+{% endif %}
+{% if 'cache' in elixir_release_app_dirs %}
+CacheDirectory={{ elixir_release_cache_directory }}
+CacheDirectoryMode={{ elixir_release_cache_directory_mode }}
+{% endif %}
+{% endif %}
 
 # From distillery https://hexdocs.pm/distillery/use-with-systemd.html
 

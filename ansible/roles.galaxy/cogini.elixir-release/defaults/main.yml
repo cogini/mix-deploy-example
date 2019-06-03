@@ -1,69 +1,99 @@
 ---
 # elixir-release/defaults/main.yml
 
-# A unique prefix for our directories
-# This could be your organization or the overall project
-elixir_release_org: myorg
+# Erlang application name
+elixir_release_app_name: mix_deploy_example
 
-# The external name of the app, used to name directories and the systemd unit
-elixir_release_name: foo
+# External name, used to name the systemd service and directories
+elixir_release_service_name: "{{ elixir_release_app_name | replace('_', '-') }}"
 
-# The internal "Elixir" name of the app, used to by Distillery to name
-# directories and scripts
-
-elixir_release_name_code: "{{ elixir_release_name }}"
+# Elixir application name
+elixir_release_app_module: "{{ elixir_release_service_name.split('_') | capitalize | join('') }}"
 
 # Version of the app in the release
-# Default is to read from file
+# If not specified, will read from file
 # elixir_release_version: "0.1.0"
 
-# App environment
-elixir_release_mix_env: prod
-
-# HTTP listen port
-elixir_release_http_listen_port: 4001
-
-# OS user that deploys / owns the release files
+# OS account that deploys and owns the release files
 elixir_release_deploy_user: deploy
-# OS group that deploys / owns the release files
+# OS group that deploys and owns the release files
 elixir_release_deploy_group: "{{ elixir_release_deploy_user }}"
 
-# OS user that the app runs under
-elixir_release_app_user: "{{ elixir_release_name }}"
+# OS account that the app runs under
+elixir_release_app_user: "{{ elixir_release_service_name }}"
 # OS group that the app runs under
 elixir_release_app_group: "{{ elixir_release_app_user }}"
 
+# App release environment
+elixir_release_mix_env: prod
+
+# HTTP listen port
+elixir_release_http_listen_port: 4000
+elixir_release_https_listen_port: 4001
+
+# Directory prefix for release files
+elixir_release_base_dir: /srv
+
 # Base directory for deploy files
-elixir_release_deploy_dir: /opt/{{ elixir_release_org }}/{{ elixir_release_name }}
+elixir_release_deploy_dir: "{{ elixir_release_base_dir }}/{{ elixir_release_service_name }}"
+
+# Directories under deploy dir
+# Where release tarballs are unpacked
 elixir_release_releases_dir: "{{ elixir_release_deploy_dir }}/releases"
+# Currently running release (symlink)
+elixir_release_current_dir: "{{ elixir_release_deploy_dir }}/current"
+# Location of deploy scripts
+elixir_release_scripts_dir: "{{ elixir_release_deploy_dir }}/bin"
+# Flag file dir, used to signal restart
+elixir_release_flags_dir: "{{ elixir_release_deploy_dir }}/flags"
 
-# Location for app temp files
-elixir_release_temp_dir: /var/tmp/{{ elixir_release_org }}/{{ elixir_release_name }}
+# Newer versions of systemd can create directories automatically
+elixir_release_app_dirs:
+  - configuration
+  - runtime
+  # - logs
+  # - tmp
+  # - state
+  # - cache
 
-# Location of runtime scripts, e.g. used in cron jobs
-elixir_release_scripts_dir: "{{ elixir_release_deploy_dir }}/scripts"
+# Standard systemd directories
+elixir_release_cache_directory: "{{ elixir_release_service_name }}"
+elixir_release_cache_directory_base: "/var/cache"
+elixir_release_cache_directory_mode: 0750
+elixir_release_cache_dir: "{{ elixir_release_cache_directory_base }}/{{ elixir_release_cache_directory }}"
 
-# These dirs are only created if they are defined
-# Location of per-machine config files
-# elixir_release_conf_dir: /etc/{{ elixir_release_name }}
+elixir_release_configuration_directory: "{{ elixir_release_service_name }}"
+elixir_release_configuration_directory_base: "/etc"
+elixir_release_configuration_directory_mode: 0550
+elixir_release_configuration_dir: "{{ elixir_release_configuration_directory_base }}/{{ elixir_release_configuration_directory }}"
 
-# Location of runtime logs
-# elixir_release_log_dir: /var/log/{{ elixir_release_name }}
+elixir_release_logs_directory: "{{ elixir_release_service_name }}"
+elixir_release_logs_directory_base: "/var/log"
+elixir_release_logs_directory_mode: 0750
+elixir_release_logs_dir: "{{ elixir_release_logs_directory_base }}/{{ elixir_release_logs_directory }}"
 
-# Base directory for app data
-# elixir_release_var_dir: /var/{{ elixir_release_org }}/{{ elixir_release_name }}
+elixir_release_runtime_directory: "{{ elixir_release_service_name }}"
+elixir_release_runtime_directory_base: "/run"
+elixir_release_runtime_directory_mode: 0750
+elixir_release_runtime_directory_preserve: "no"
+elixir_release_runtime_dir: "{{ elixir_release_runtime_directory_base }}/{{ elixir_release_runtime_directory }}"
 
-# Location of app data files
-# elixir_release_data_dir: "{{ elixir_release_var_dir }}/data"
+elixir_release_state_directory: "{{ elixir_release_service_name }}"
+elixir_release_state_directory_base: "/var/lib"
+elixir_release_state_directory_mode: 0750
+elixir_release_state_dir: "{{ elixir_release_state_directory_base }}/{{ elixir_release_state_directory }}"
 
-# Path to conform conf file
-# elixir_release_conform_conf_path: "{{ elixir_release_conf_dir }}/{{ elixir_release_name_code }}.conf"
+elixir_release_tmp_directory: "{{ elixir_release_service_name }}"
+elixir_release_tmp_directory_base: "/var/tmp"
+elixir_release_tmp_directory_mode: 0750
+elixir_release_tmp_dir: "{{ elixir_release_tmp_directory_base }}/{{ elixir_release_tmp_directory }}"
 
-# Location of flag dir
-elixir_release_shutdown_flag_dir: "/var/tmp/{{ elixir_release_deploy_user }}/{{ elixir_release_name }}"
-elixir_release_shutdown_flag_file: "{{ app_shutdown_flag_dir }}/shutdown.flag"
+# Whether to use conform https://github.com/bitwalker/conform
+elixir_release_conform: false
+elixir_release_conform_conf_path: "{{ elixir_release_configuration_dir }}/config.conform"
 
 elixir_release_restart_method: systemctl
+# elixir_release_restart_method: systemd_flag
 # elixir_release_restart_method: touch
 
 # Defaults
@@ -71,3 +101,27 @@ elixir_release_restart_method: systemctl
 elixir_release_limit_nofile: 65536
 # Seconds to wait between restarts
 elixir_release_systemd_restart_sec: 5
+elixir_release_lang: "en_US.UTF-8"
+elixir_release_umask: "0027"
+
+# Target systemd version
+elixir_release_systemd_version: 219
+# elixir_release_systemd_version: 219 # CentOS 7
+# elixir_release_systemd_version: 229 # Ubuntu 16.04
+# elixir_release_systemd_version: 237 # Ubuntu 18.04
+
+# Source of systemd unit file.
+# elixir_release_systemd_source: self # generate using this role templates
+elixir_release_systemd_source: mix_systemd # copy files generated by mix_systemd in _build dir
+# elixir_release_scripts_source: self # generate using this role templates
+# elixir_release_scripts_source: mix_systemd # copy files generated by mix_systemd in _build dir
+elixir_release_scripts_source: bin # copy files generated by mix_deploy in bin dir
+
+elixir_release_service_type: simple
+elixir_release_start_command: foreground
+elixir_release_pid_file: "{{ elixir_release_runtime_dir }}/{{ elixir_release_app_name}}.pid"
+
+# List of ExecStartPre scripts in systemd unit file
+elixir_release_exec_start_pre: []
+# List of environment vars to set in systemd unit file
+elixir_release_env_vars: []

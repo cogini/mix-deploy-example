@@ -1,0 +1,85 @@
+# tasks file for elixir-release/systemd
+
+- block:
+  - name: Create systemd unit
+    template:
+      src: lib/systemd/system/app.service.j2
+      dest: /lib/systemd/system/{{ elixir_release_service_name }}.service
+      owner: root
+      group: root
+      mode: 0644
+    notify: systemctl daemon-reload
+    # Theoretically ansible_service_mgr is enough, but I have had problems with detection
+    # when: "ansible_service_mgr == 'systemd' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
+
+  - name: Enable service
+    service: name={{ elixir_release_service_name }} enabled=yes
+    environment:
+      PATH: /sbin:{{ ansible_env.PATH }}
+
+  - block:
+    - name: Create systemd restart service unit
+      template:
+        src: lib/systemd/system/restart.service.j2
+        dest: /lib/systemd/system/restart-{{ elixir_release_service_name }}.service
+        owner: root
+        group: root
+        mode: 0644
+      notify: systemctl daemon-reload
+
+    - name: Create systemd restart path unit
+      template:
+        src: lib/systemd/system/restart.path.j2
+        dest: /lib/systemd/system/restart-{{ elixir_release_service_name }}.path
+        owner: root
+        group: root
+        mode: 0644
+      notify: systemctl daemon-reload
+
+    - name: Enable restart service
+      service: name=restart-{{ elixir_release_service_name }}.service enabled=yes
+
+    - name: Enable restart path
+      service: name=restart-{{ elixir_release_service_name }}.path enabled=yes
+
+    when: elixir_release_restart_method == 'systemd_flag'
+
+  - name: Enable service
+    service: name={{ elixir_release_service_name }} enabled=yes
+    environment:
+      PATH: /sbin:{{ ansible_env.PATH }}
+
+  - name: Create sudoers config for deploy user
+    template:
+      src: etc/sudoers.d/app.j2
+      dest: /etc/sudoers.d/{{ elixir_release_deploy_user }}-{{ elixir_release_service_name }}
+      owner: root
+      group: root
+      mode: 0600
+    when: elixir_release_restart_method == 'systemctl'
+
+  when: elixir_release_systemd_source == 'self'
+
+- block:
+
+  - name: Set vars
+    set_fact:
+      # Location on local filesystem of release files
+      elixir_release_build_dir: "{{ role_path }}/../../../_build/{{ elixir_release_mix_env }}"
+
+  - name: Copy systemd unit files from release
+    copy:
+      src: "{{ item }}"
+      dest: "/lib/systemd/system/"
+      owner: "root"
+      group: "root"
+      mode: 0600
+    with_fileglob:
+      - "{{ elixir_release_build_dir }}systemd/var/lib/systemd/*"
+
+  - name: Enable systemd unit files from release
+    service: name={{ item | basename}} enabled=yes
+    with_fileglob:
+      - "{{ elixir_release_build_dir }}systemd/var/lib/systemd/*"
+
+  when: elixir_release_systemd_source == 'mix_systemd'

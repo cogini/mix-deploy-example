@@ -1,0 +1,75 @@
+---
+# tasks file for elixir-release/setup
+#
+# These tasks set up the target system for the app, creating directories, etc.
+# Run them from a user with sudo permissions.
+
+- name: Create deploy dirs
+  file: path={{ item }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0750
+  with_items:
+    - "{{ elixir_release_deploy_dir }}"
+    - "{{ elixir_release_releases_dir }}"
+    - "{{ elixir_release_scripts_dir }}"
+
+- name: Create configuration dir
+  file: path={{ elixir_release_configuration_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0750
+  when: elixir_release_configuration_dir is defined
+
+- name: Create flags dir
+  file: path={{ elixir_release_shutdown_flags_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0770
+  when: "elixir_release_restart_method in ['systemd_flag', 'touch']"
+
+# Dirs owned/writable by app user
+- name: Create cache dir
+  file:
+    path: "{{ elixir_release_cache_dir }}"
+    state: directory
+    owner: "{{ elixir_release_app_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode:  "{{ elixir_release_cache_directory_mode }}"
+    when: "'cache' in elixir_release_app_dirs"
+
+- name: Create configuration dir
+  file:
+    path: "{{ elixir_release_configuration_dir }}"
+    state: directory
+    owner: "{{ elixir_release_app_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode:  "{{ elixir_release_configuration_directory_mode }}"
+    when: "'configuration' in elixir_release_app_dirs"
+
+- name: Create logs dir
+  file:
+    path: "{{ elixir_release_logs_dir }}"
+    state: directory
+    owner: "{{ elixir_release_app_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode:  "{{ elixir_release_logs_directory_mode }}"
+    when: "'logs in elixir_release_app_dirs"
+
+- name: Create runtime dir
+  file:
+    path: "{{ elixir_release_runtime_dir }}"
+    state: directory
+    owner: "{{ elixir_release_app_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode:  "{{ elixir_release_runtime_directory_mode }}"
+    when: "'runtime' in elixir_release_app_dirs"
+
+- name: Create state dir
+  file:
+    path: "{{ elixir_release_state_dir }}"
+    state: directory
+    owner: "{{ elixir_release_app_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode:  "{{ elixir_release_state_directory_mode }}"
+    when: "'state' in elixir_release_app_dirs"
+
+- name: Create tmp dir
+  file:
+    path: "{{ elixir_release_tmp_dir }}"
+    tmp: directory
+    owner: "{{ elixir_release_app_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode:  "{{ elixir_release_tmp_directory_mode }}"
+    when: "'tmp' in elixir_release_app_dirs"

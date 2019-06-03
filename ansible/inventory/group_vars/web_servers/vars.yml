@@ -16,8 +16,9 @@ users_deploy_groups:
   - systemd-journal
 
 # Users who can ssh into the deploy account
-# This is needed to run the build and deploy scripts
-users_deploy_users: "{{ users_global_admin_users }}"
+# This is needed to deploy the app
+users_deploy_users:
+  - "{{ elixir_release_deploy_user }}"
 
 # Users who can ssh into the app account
 # This is not strictly needed, but can be useful for devs

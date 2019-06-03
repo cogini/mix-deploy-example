@@ -38,37 +38,11 @@ set Ansible variables to match the Elixir app you are deploying.
 
 ```yaml
 # External name of the app, used to name directories and the systemd unit
-elixir_release_name: mix-deploy-example
-
-# Internal Erlang name of the app, used by Distillery to name directories
-elixir_release_name_code: mix_deploy_example
-
-# Internal Elixir name of the app
-elixir_release_name_module: MixDeployExample
-
-# Location to deploy to
-elixir_release_deploy_dir: "/srv/{{ elixir_release_name }}"
-
-# OS user for deploy
-elixir_release_deploy_user: deploy
-elixir_release_deploy_group: "{{ elixir_release_deploy_user }}"
-
-# OS user the app runs under
-elixir_release_app_user: app
-elixir_release_app_group: "{{ elixir_release_app_user }}"
-
-# Port that Phoenix listens on
-elixir_release_http_listen_port: 4000
-
-# Configure firewall to open the port
-iptables_http_app_port: "{{ elixir_release_http_listen_port }}"
-
-# Config dir under base (combined systemd)
-elixir_release_conf_dir: "/etc/{{ elixir_release_name }}"
-
-# Directory for runtime scripts
-elixir_release_scripts_dir: "{{ elixir_release_deploy_dir }}/bin"
+elixir_release_app_name: mix-deploy-example
 ```
+
+See `roles.galaxy/cogini.elixir-release/defaults/main.yml` and
+`roles.galaxy/cogini.elixir-release/README.md`.
 
 ## Configure OS accounts
 
@@ -105,13 +79,13 @@ Run Ansible to do the initial setup on the server, including creating
 users and setting up iptables firewall.
 
 The `-u` flag specifies the user for the initial setup. For a dedicated server,
-that might be root. In a cloud environment, it might be a default user like
+that might be `root`. In a cloud environment, it might be a default user like
 `centos` or `ubuntu` with your keypair installed. The user needs to be root or
-a user with sudo permissions. See `playbooks/manage-users.yml` for other connection
-options, e.g. specifying a password manually.
+a user with sudo permissions. See `playbooks/manage-users.yml` for other
+connection options, e.g. specifying a root password manually.
 
 ```shell
-ansible-playbook -u root -v -l web-servers playbooks/setup-web.yml -D
+ansible-playbook -u root -v -l web_servers playbooks/setup-web.yml -D
 ```
 
 At this point, you can log in with the user you specified (e.g. `jake`) and
@@ -120,7 +94,7 @@ complete setup using the `mix_deploy` scripts.
 Alternatively, you can set up the app directories using Ansible:
 
 ```shell
-ansible-playbook -u $USER -v -l web-servers playbooks/deploy-app.yml --skip-tags deploy -D
+ansible-playbook -u $USER -v -l web_servers playbooks/deploy-app.yml --skip-tags deploy -D
 ```
 
 # Deploy config to web server
@@ -133,8 +107,15 @@ a template and push it to the web server.
 
 This is most useful for fleets of dediated servers.
 
+First, configure the db server settings in `inventory/group_vars/all/db.yml`
+`db_password` in `inventory/group_vars/all/secrets.yml` and `secret_key_base`
+in `inventory/group_vars/web_servers/secrets.yml`.
+
+Use the [Ansible vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html) to manage
+the secrets.
+
 ```
-ansible-playbook -u $USER -v -l web-servers playbooks/config-web.yml -D
+ansible-playbook -u $USER -v -l web_servers playbooks/config-web.yml -D
 ```
 
 See `templates/app.config.toml.j2`.
@@ -145,13 +126,13 @@ Build the release on a build server, then push it to prod servers and restart.
 This is most useful for fleets of dediated servers.
 
 ```shell
-ansible-playbook -u deploy -v -l web-servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
+ansible-playbook -u deploy -v -l web_servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
 ```
 
 You can install Ansible on the build machine with:
 
 ```shell
-ansible-playbook -u $USER -v -l web-servers playbooks/setup-ansible.yml -D
+ansible-playbook -u $USER -v -l web_servers playbooks/setup-ansible.yml -D
 ```
 
 # Set up local database
@@ -159,7 +140,7 @@ ansible-playbook -u $USER -v -l web-servers playbooks/setup-ansible.yml -D
 The following playbook sets up a Postgres database:
 
 ```shell
-ansible-playbook -u $USER -v -l db-servers playbooks/setup-db.yml -D
+ansible-playbook -u $USER -v -l db_servers playbooks/setup-db.yml -D
 ```
 
 Configuration is in `inventory/group_vars/db-servers/postgresql.yml`.
@@ -169,7 +150,7 @@ Configuration is in `inventory/group_vars/db-servers/postgresql.yml`.
 This playbook sets up the build server, installing ASDF:
 
 ```
-ansible-playbook -u root -v -l build-servers playbooks/setup-build.yml -D
+ansible-playbook -u root -v -l build_servers playbooks/setup-build.yml -D
 ```
 
 See `inventory/group_vars/build-servers/vars.yml`, particularly `app_repo` for

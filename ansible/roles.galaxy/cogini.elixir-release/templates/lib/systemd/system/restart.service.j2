@@ -1,0 +1,10 @@
+[Unit]
+Description={{ elixir_release_app_name }} restarter
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl restart {{ elixir_release_service_name }}.service
+
+[Install]
+WantedBy=multi-user.target

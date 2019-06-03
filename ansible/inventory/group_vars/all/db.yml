@@ -1,6 +1,6 @@
 # Database settings
-db_username: "{{ elixir_release_name_code }}_prod"
-db_database: "{{ elixir_release_name_code }}_prod"
+db_username: "{{ elixir_release_app_name }}_prod"
+db_database: "{{ elixir_release_app_name }}_prod"
 db_hostname: localhost
 db_adapter: Elixir.Ecto.Adapters.Postgres
 db_ssl: "true"

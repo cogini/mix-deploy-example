@@ -1,8 +1,17 @@
 ---
 # tasks file for app
 
-- include_tasks: setup.yml
+- include_tasks: dirs.yml
   become: true
+  tags: ['dirs']
+
+- include_tasks: systemd.yml
+  become: true
+  tags: ['systemd']
+
+- include_tasks: scripts.yml
+  become: true
+  tags: ['scripts']
 
 # - include_tasks: config.yml
 #   become: true

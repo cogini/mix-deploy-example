@@ -6,7 +6,7 @@
 - name: Set vars
   set_fact:
     # Location on local filesystem of release files
-    elixir_release_local_dir: "{{ role_path }}/../../../_build/{{ elixir_release_mix_env }}/rel/{{ elixir_release_name_code }}/releases"
+    elixir_release_local_dir: "{{ role_path }}/../../../_build/{{ elixir_release_mix_env }}/rel/{{ elixir_release_app_name }}/releases"
     # Name of target dir
     elixir_release_timestamp: "{{ ansible_date_time['iso8601_basic_short'] }}"
 
@@ -27,7 +27,7 @@
 
 - name: Get local release file
   set_fact:
-    elixir_release_local_release_file: "{{ elixir_release_local_dir }}/{{ elixir_release_version }}/{{ elixir_release_name_code }}.tar.gz"
+    elixir_release_local_release_file: "{{ elixir_release_local_dir }}/{{ elixir_release_version }}/{{ elixir_release_app_name }}.tar.gz"
 
 - name: Create release dir
   file:
@@ -51,19 +51,28 @@
       group: "{{ elixir_release_app_group }}"
       mode: 0750
     with_items:
-      - "{{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_name_code }}"
-      - "{{ elixir_release_deploy_dir }}/current/releases/{{ elixir_release_version }}/{{ elixir_release_name_code }}.sh"
+      - "{{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_app_name }}"
+      - "{{ elixir_release_deploy_dir }}/current/releases/{{ elixir_release_version }}/{{ elixir_release_app_name }}.sh"
 
   when: not ansible_check_mode
 
 - name: Restart app using systemctl
-  command: sudo /bin/systemctl restart {{ elixir_release_name}}
+  command: sudo /bin/systemctl restart {{ elixir_release_service_name}}
   when: "elixir_release_restart_method == 'systemctl'"
   # when: "ansible_service_mgr == 'systemd' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
 
+- name: Touch systemd restart flag file
+  file:
+    path: "{{ elixir_release_shutdown_flags_dir }}/restart.flag"
+    state: touch
+    mode: '0660'
+    owner: "{{ elixir_release_deploy_user }}"
+    group: "{{ elixir_release_deploy_group }}"
+  when: "elixir_release_restart_method == 'systemd_flag'"
+
 - name: Touch shutdown flag file
   file:
-    path: "{{ elixir_release_shutdown_flag_file }}"
+    path: "{{ elixir_release_shutdown_flags_dir }}/restart.flag"
     state: touch
     mode: '0660'
     owner: "{{ elixir_release_deploy_user }}"

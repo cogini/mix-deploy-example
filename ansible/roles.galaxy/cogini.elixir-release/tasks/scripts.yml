@@ -1,0 +1,37 @@
+# tasks file for elixir-release/scripts
+
+- name: Set vars
+  set_fact:
+    # Location on local filesystem of release files
+    elixir_release_build_dir: "{{ role_path }}/../../../_build/{{ elixir_release_mix_env }}"
+
+- name: Create remote_console.sh
+  template:
+    src: scripts/remote_console.sh.j2
+    dest: "{{ elixir_release_scripts_dir }}/remote_console.sh"
+    owner: "{{ elixir_release_deploy_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode: 0750
+  when: "elixir_release_scripts_source == 'self'"
+
+- name: Copy deploy scripts from release
+  copy:
+    src: "{{ item }}"
+    dest: "{{ elixir_release_scripts_dir }}"
+    owner: "{{ elixir_release_deploy_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode: 750
+  with_fileglob:
+    - "{{ elixir_release_build_dir }}/deploy/bin/*"
+  when: "elixir_release_systemd_source == 'mix_deploy'"
+
+- name: Copy deploy scripts from release
+  copy:
+    src: "{{ item }}"
+    dest: "{{ elixir_release_scripts_dir }}"
+    owner: "{{ elixir_release_deploy_user }}"
+    group: "{{ elixir_release_app_group }}"
+    mode: 750
+  with_fileglob:
+    - "{{ role_path }}/../../../bin/*"
+  when: "elixir_release_systemd_source == 'bin'"
