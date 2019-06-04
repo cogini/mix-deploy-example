@@ -14,7 +14,6 @@ ELIXIR_VERSION="${ELIXIR_VERSION:-1.8.2}"
 # Make sure we have a good LANG
 export LANG="${LANG:-en_US.UTF-8}"
 
-
 echo "==> Initialize package manager and install basic utilities"
 
 export DEBIAN_FRONTEND=noninteractive
