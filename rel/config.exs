@@ -40,12 +40,19 @@ environment :prod do
   set cookie: :"pRlPiv!OOD6@zc(%Du^>T19IH]2NQA0}$f9q10E<>UZ`K!dk.G6/4HV]!>3mRi.k"
   set vm_args: "rel/vm.args"
 
+  set config_providers: [
+    {Mix.Releases.Config.Providers.Elixir, ["/etc/mix-deploy-example/config.exs"]}
+    # {Toml.Provider, [path: "/etc/mix-deploy-example/config.toml"]},
+  ]
+
   set commands: [
     migrate: "rel/commands/migrate.sh"
   ]
 
-  set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/mix-deploy-example/config.exs"]}
+  set overlays: [
+    {:mkdir, "etc"},
+    {:copy, "rel/etc/environment", "etc/environment"},
+    # {:template, "rel/etc/environment", "etc/environment"}
   ]
 end
 
