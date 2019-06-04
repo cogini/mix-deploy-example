@@ -5,6 +5,8 @@ files:
     destination: /srv/mix-deploy-example/bin
   - source: systemd
     destination: /lib/systemd/system
+  - source: etc
+    destination: /srv/mix-deploy-example/etc
 # https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-permissions.html
 # permissions:
 #   - object: /srv/mix--deploy-example
