@@ -21,6 +21,12 @@ iptables_http_external_port_http: 80
 iptables_http_external_port_https: 443
 ```
 
+Whether to open external ports:
+```yaml
+iptables_http_open_http: false
+iptables_http_open_https: false
+```
+
 Whether to redirect external port to listen port
 ```yaml
 iptables_http_redirect_http: true
@@ -45,6 +51,7 @@ iptables_http_rate_limit_options_https: "-m hashlimit --hashlimit-name HTTPS --h
 - hosts: '*'
   become: true
   roles:
+     - iptables
      - iptables-http
 ```
 
