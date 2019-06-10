@@ -3,10 +3,10 @@
 # Install roles from Ansible galaxy (https://galaxy.ansible.com/)
 # to the project roles.galaxy directory.
 #
-# ansible-galaxy install --roles-path roles.galaxy -r requirements.yml
+#   ansible-galaxy install --roles-path roles.galaxy -r requirements.yml
 #
-# We usually check in the downloaded roles to source control in the project
-# to snapshot a working version.
+# We normally check the downloaded roles into source control to snapshot
+# a working version and ensure availability.
 
 # - src: cogini.users
 - src: https://github.com/cogini/ansible-role-users
