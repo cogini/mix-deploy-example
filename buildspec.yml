@@ -23,6 +23,7 @@ phases:
       # Copy config from build environment to runtime environment
       - mkdir -p rel/etc
       - echo "CONFIG_S3_BUCKET=$CONFIG_S3_BUCKET" >> rel/etc/environment
+      - echo "CONFIG_S3_PREFIX=$CONFIG_S3_PREFIX" >> rel/etc/environment
   build:
     commands:
       # Build the app
