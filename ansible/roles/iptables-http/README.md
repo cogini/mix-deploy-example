@@ -43,8 +43,9 @@ iptables_http_rate_limit_options_https: "-m hashlimit --hashlimit-name HTTPS --h
 
 ```yaml
 - hosts: '*'
+  become: true
   roles:
-     - { role: iptables-http, become: true }
+     - iptables-http
 ```
 
 # License
