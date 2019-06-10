@@ -1,6 +1,6 @@
 # iptables
 
-This role sets up iptables using [ansible_iptables_raw](https://github.com/Nordeus/ansible_iptables_raw).
+Set up iptables using [ansible_iptables_raw](https://github.com/Nordeus/ansible_iptables_raw).
 
 # Requirements
 
