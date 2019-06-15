@@ -10,9 +10,9 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
-  url: [host: nil, port: 80],
+  # url: [host: nil, port: 80],
   http: [:inet6, port: System.get_env("PORT") || 4000],
-  # url: [host: nil, port: 443],
+  url: [host: nil, port: 443],
   https: [
     port: 4001,
     cipher_suite: :strong,
