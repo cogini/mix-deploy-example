@@ -27,6 +27,7 @@ phases:
   build:
     commands:
       # Build the app
+      - echo "Starting build"
       - chmod +x bin/build
       - bin/build
   post_build:
