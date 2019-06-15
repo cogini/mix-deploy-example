@@ -260,6 +260,8 @@ environment :prod do
 end
 ```
 
+- Add TOML lib to `mix.exs`
+
 ## Add Ansible scripts
 
 ## Add Docker file
