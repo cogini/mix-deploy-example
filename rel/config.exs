@@ -41,8 +41,8 @@ environment :prod do
   set vm_args: "rel/vm.args"
 
   set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/mix-deploy-example/config.exs"]}
-    # {Toml.Provider, [path: "/etc/mix-deploy-example/config.toml"]},
+    {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
+    # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
   ]
 
   set commands: [
@@ -55,6 +55,29 @@ environment :prod do
     # {:template, "rel/etc/environment", "etc/environment"}
   ]
 end
+
+environment :prodaws do
+  set include_erts: true
+  set include_src: false
+  set cookie: :"pRlPiv!OOD6@zc(%Du^>T19IH]2NQA0}$f9q10E<>UZ`K!dk.G6/4HV]!>3mRi.k"
+  set vm_args: "rel/vm.args"
+
+  set config_providers: [
+    # {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
+    {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
+  ]
+
+  set commands: [
+    migrate: "rel/commands/migrate.sh"
+  ]
+
+  set overlays: [
+    {:mkdir, "etc"},
+    {:copy, "rel/etc/environment", "etc/environment"},
+    # {:template, "rel/etc/environment", "etc/environment"}
+  ]
+end
+
 
 # You may define one or more releases in this file.
 # If you have not set a default release, or selected one

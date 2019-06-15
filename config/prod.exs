@@ -83,7 +83,10 @@ config :mix_deploy,
 
 config :mix_systemd,
   app_user: "app",
-  app_group: "app"
+  app_group: "app",
+  env_vars: [
+    "REPLACE_OS_VARS=true",
+  ]
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.

@@ -84,6 +84,9 @@ config :mix_deploy,
 config :mix_systemd,
   app_user: "app",
   app_group: "app",
+  env_vars: [
+    "REPLACE_OS_VARS=true",
+  ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
   ]
