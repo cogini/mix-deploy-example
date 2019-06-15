@@ -10,8 +10,19 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
+  url: [host: nil, port: 80],
   http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: "example.com", port: 80],
+  # url: [host: nil, port: 443],
+  # https: [
+  #   port: 4001,
+  #   cipher_suite: :strong,
+  #   keyfile: "/etc/mix-deploy-example/ssl/app.key",
+  #   certfile: "/etc/mix-deploy-example/ssl/app.cert.pem",
+  #   # cacertfile: "/etc/mix-deploy-example/ssl/app.cacert.pem",
+  #   # dhfile: "/etc/mix-deploy-example/ssl/app.dh.pem",
+  # ],
+  # force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  # force_ssl: [hsts: true],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
