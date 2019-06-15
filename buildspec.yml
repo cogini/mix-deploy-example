@@ -48,6 +48,8 @@ cache:
     - 'deps/**/*'
     # npm libraries for asset pipeline
     - 'assets/node_modules/**/*'
+    # Mix packages
+    - '/root/.mix/**/*'
     # ASDF packages
     # - '/root/.asdf/**/*'
     # Node keys
