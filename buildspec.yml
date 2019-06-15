@@ -16,6 +16,8 @@ phases:
       # Install using ASDF
       # - bin/build-install-asdf-ubuntu
       # - bin/build-init-asdf
+      - mix local.hex --if-missing --force
+      - mix local.rebar --if-missing --force
   pre_build:
     commands:
       # Install using ASDF
