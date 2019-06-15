@@ -83,7 +83,10 @@ config :mix_deploy,
 
 config :mix_systemd,
   app_user: "app",
-  app_group: "app"
+  app_group: "app",
+  exec_start_pre: [
+    "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
+  ]
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
