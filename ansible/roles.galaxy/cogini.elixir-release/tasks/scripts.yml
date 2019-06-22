@@ -20,7 +20,7 @@
     dest: "{{ elixir_release_scripts_dir }}"
     owner: "{{ elixir_release_deploy_user }}"
     group: "{{ elixir_release_app_group }}"
-    mode: 750
+    mode: 0750
   with_fileglob:
     - "{{ elixir_release_build_dir }}/deploy/bin/*"
   when: "elixir_release_systemd_source == 'mix_deploy'"
@@ -31,7 +31,7 @@
     dest: "{{ elixir_release_scripts_dir }}"
     owner: "{{ elixir_release_deploy_user }}"
     group: "{{ elixir_release_app_group }}"
-    mode: 750
+    mode: 0750
   with_fileglob:
     - "{{ role_path }}/../../../bin/*"
   when: "elixir_release_systemd_source == 'bin'"

@@ -15,9 +15,13 @@
   file: path={{ elixir_release_configuration_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0750
   when: elixir_release_configuration_dir is defined
 
-- name: Create flags dir
+- name: Create flags dir for systemd
+  file: path={{ elixir_release_shutdown_flags_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0700
+  when: "elixir_release_restart_method  == 'systemd_flag'"
+
+- name: Create flags dir for touch
   file: path={{ elixir_release_shutdown_flags_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0770
-  when: "elixir_release_restart_method in ['systemd_flag', 'touch']"
+  when: "elixir_release_restart_method  == 'touch'"
 
 # Dirs owned/writable by app user
 - name: Create cache dir

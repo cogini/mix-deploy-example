@@ -1,5 +1,14 @@
 # tasks file for elixir-release/systemd
 
+- name: Create sudoers config for deploy user
+  template:
+    src: etc/sudoers.d/app.j2
+    dest: /etc/sudoers.d/{{ elixir_release_deploy_user }}-{{ elixir_release_service_name }}
+    owner: root
+    group: root
+    mode: 0600
+  when: elixir_release_restart_method == 'systemctl'
+
 - block:
   - name: Create systemd unit
     template:
@@ -49,15 +58,6 @@
     environment:
       PATH: /sbin:{{ ansible_env.PATH }}
 
-  - name: Create sudoers config for deploy user
-    template:
-      src: etc/sudoers.d/app.j2
-      dest: /etc/sudoers.d/{{ elixir_release_deploy_user }}-{{ elixir_release_service_name }}
-      owner: root
-      group: root
-      mode: 0600
-    when: elixir_release_restart_method == 'systemctl'
-
   when: elixir_release_systemd_source == 'self'
 
 - block:
@@ -78,7 +78,9 @@
       - "{{ elixir_release_build_dir }}systemd/var/lib/systemd/*"
 
   - name: Enable systemd unit files from release
-    service: name={{ item | basename}} enabled=yes
+    service:
+      name: "{{ item | basename }}"
+      enabled: yes
     with_fileglob:
       - "{{ elixir_release_build_dir }}systemd/var/lib/systemd/*"
 
