@@ -10,9 +10,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
-  http: [:inet6, port: {:system, "PORT"}],
+  http: [:inet6, port: System.get_env("PORT") || 4000],
+  # http: [:inet6, port: {:system, "PORT"}],
   https: [
-    port: {:system, "HTTPS_PORT"},
+    port: System.get_env("PORT") || 4001,
     cipher_suite: :strong,
     keyfile: "/etc/mix-deploy-example/ssl/app-https.key",
     certfile: "/etc/mix-deploy-example/ssl/app-https.cert.pem",
@@ -21,8 +22,10 @@ config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
   ],
   # force_ssl: [rewrite_on: [:x_forwarded_proto]],
   # force_ssl: [hsts: true],
-  url: [host: {:system, "HOST"}, port: 443],
-  static_url: [host: {:system, "ASSETS_HOST"}, port: 443],
+  # url: [host: {:system, "HOST"}, port: 443],
+  # static_url: [host: {:system, "ASSETS_HOST"}, port: 443],
+  url: [host: System.get_env("HOST"), port: 443],
+  static_url: [host: System.get_env("ASSETS_HOST"), port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -86,10 +89,6 @@ config :mix_systemd,
   app_group: "app",
   env_vars: [
     "REPLACE_OS_VARS=true",
-    "PORT=4000",
-    "HTTPS_PORT=4001",
-    "HOST=rubegoldberg.io",
-    "ASSETS_HOST=assets.rubegoldberg.io",
   ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"

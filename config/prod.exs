@@ -10,18 +10,19 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
-  http: [:inet6, port: {:system, "PORT"}],
+  http: [:inet6, port: System.get_env("PORT") || 4000],
+  # http: [:inet6, port: {:system, "PORT"}],
   # https: [
-  #   port: 4001,
+  #   port: System.get_env("PORT") || 4001,
   #   cipher_suite: :strong,
-  #   keyfile: "/etc/mix-deploy-example/ssl/app.key",
-  #   certfile: "/etc/mix-deploy-example/ssl/app.cert.pem",
-  #   # cacertfile: "/etc/mix-deploy-example/ssl/app.cacert.pem",
-  #   # dhfile: "/etc/mix-deploy-example/ssl/app.dh.pem",
+  #   keyfile: "/etc/mix-deploy-example/ssl/app-https.key",
+  #   certfile: "/etc/mix-deploy-example/ssl/app-https.cert.pem",
+  #   # cacertfile: "/etc/mix-deploy-example/ssl/app-https.cacert.pem",
+  #   # dhfile: "/etc/mix-deploy-example/ssl/app-https.dh.pem",
   # ],
   # force_ssl: [rewrite_on: [:x_forwarded_proto]],
   # force_ssl: [hsts: true],
-  url: [host: {:system, "HOST"}, port: 80],
+  # url: [host: {:system, "HOST"}, port: 80],
   # static_url: [host: {:system, "ASSETS_HOST"}, port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
@@ -86,8 +87,6 @@ config :mix_systemd,
   app_group: "app",
   env_vars: [
     "REPLACE_OS_VARS=true",
-    "PORT=4000",
-    "HOST=rubegoldberg.io",
   ]
 
 # Finally import the config/prod.secret.exs which should be versioned
