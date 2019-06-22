@@ -8,13 +8,12 @@
 # We normally check the downloaded roles into source control to snapshot
 # a working version and ensure availability.
 
-# - src: cogini.users
-- src: https://github.com/cogini/ansible-role-users
-  name: cogini.users
-# - src: cogini.elixir-release
-- src: https://github.com/cogini/ansible-role-elixir-release
-  name: cogini.elixir-release
-  # version: master
+- src: cogini.users
+# - src: https://github.com/cogini/ansible-role-users
+#   name: cogini.users
+- src: cogini.elixir-release
+# - src: https://github.com/cogini/ansible-role-elixir-release
+#   name: cogini.elixir-release
 - src: ANXS.postgresql
 
 # iibrary/iptables_raw.py comes from
