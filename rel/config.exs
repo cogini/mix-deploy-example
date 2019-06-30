@@ -38,7 +38,7 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"pRlPiv!OOD6@zc(%Du^>T19IH]2NQA0}$f9q10E<>UZ`K!dk.G6/4HV]!>3mRi.k"
-  set vm_args: "rel/vm.args"
+  set vm_args: "rel/vm.args.eex"
 
   set config_providers: [
     {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
