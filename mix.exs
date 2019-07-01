@@ -33,7 +33,7 @@ defmodule MixDeployExample.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:distillery, "~> 2.0"},
+      # {:distillery, "~> 2.0"},
       {:ecto_sql, "~> 3.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
