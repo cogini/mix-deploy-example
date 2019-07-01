@@ -10,7 +10,23 @@ defmodule MixDeployExample.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: [
+        prod: [
+          include_executables_for: [:unix],
+          config_providers: [
+            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
+            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
+          ]
+        ],
+        prodaws: [
+          include_executables_for: [:unix],
+          config_providers: [
+            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
+            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
+          ]
+        ]
+      ]
     ]
   end
 
