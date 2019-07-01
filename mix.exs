@@ -10,7 +10,23 @@ defmodule MixDeployExample.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: [
+        prod: [
+          include_executables_for: [:unix],
+          config_providers: [
+            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
+            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
+          ]
+        ],
+        prodaws: [
+          include_executables_for: [:unix],
+          config_providers: [
+            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
+            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
+          ]
+        ]
+      ]
     ]
   end
 
@@ -33,7 +49,7 @@ defmodule MixDeployExample.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:distillery, "~> 2.0"},
+      # {:distillery, "~> 2.0"},
       {:ecto_sql, "~> 3.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
