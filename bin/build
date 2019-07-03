@@ -11,6 +11,11 @@ CURDIR="$PWD"
 BINDIR=$(dirname "$0")
 cd "$BINDIR"; BINDIR="$PWD"; cd "$CURDIR"
 
+DISTILLERY="${DISTILLERY:-false}"
+VERSION=$(grep -oEi 'version:\s*\"([^\"]+)\"' mix.exs | grep -oEi '\".+\"' | grep -oEi '[^\"]+')
+RELEASE_NAME="${RELEASE_NAME:-prod}"
+RELEASE_DIR="_build/${MIX_ENV}/rel/${RELEASE_NAME}"
+TAR_FILE="${RELEASE_DIR}/releases/${VERSION}/${RELEASE_NAME}.tar.gz"
 BASEDIR="$BINDIR/.."
 cd "$BASEDIR"
 
@@ -26,9 +31,7 @@ echo "===> Installing node modules"
 (cd assets && npm install)
 
 echo "===> Generating assets"
-# (cd assets && node node_modules/brunch/bin/brunch build)
-# (cd assets && node node_modules/webpack/bin/webpack.js --mode development)
-(cd assets && node node_modules/webpack/bin/webpack.js --mode production)
+(cd assets && npm run deploy)
 
 echo "Building digest files"
 mix phx.digest
@@ -48,3 +51,11 @@ echo "===> Building release"
 # In 1.9.0, the `:default_release` option doesn't work, waiting for the patch
 # to get into stable
 mix release prod
+
+if [ "$DISTILLERY" = false ]; then
+  echo "===> Creating a tarball"
+  [ -f "${TAR_FILE}" ] && rm "${TAR_FILE}"
+  tar -czf "${TAR_FILE}" "${RELEASE_DIR}/*"
+fi
+
+echo "Release built!"
