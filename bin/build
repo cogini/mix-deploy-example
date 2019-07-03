@@ -14,7 +14,7 @@ cd "$BINDIR"; BINDIR="$PWD"; cd "$CURDIR"
 DISTILLERY="${DISTILLERY:-false}"
 VERSION=$(grep -oEi 'version:\s*\"([^\"]+)\"' mix.exs | grep -oEi '\".+\"' | grep -oEi '[^\"]+')
 RELEASE_NAME="${RELEASE_NAME:-prod}"
-RELEASE_DIR="_build/${MIX_ENV}/rel/${RELEASE_NAME}"
+RELEASE_DIR="${CURDIR}/_build/${MIX_ENV}/rel/${RELEASE_NAME}"
 TAR_FILE="${RELEASE_DIR}/releases/${VERSION}/${RELEASE_NAME}.tar.gz"
 BASEDIR="$BINDIR/.."
 cd "$BASEDIR"
@@ -50,7 +50,7 @@ echo "===> Building release"
 # mix release --verbose
 # In 1.9.0, the `:default_release` option doesn't work, waiting for the patch
 # to get into stable
-mix release prod
+mix release prod --overwrite
 
 if [ "$DISTILLERY" = false ]; then
   echo "===> Creating a tarball"
