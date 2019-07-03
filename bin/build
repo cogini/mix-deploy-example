@@ -45,4 +45,6 @@ chmod +x bin/*
 
 echo "===> Building release"
 # mix release --verbose
-mix release
+# In 1.9.0, the `:default_release` option doesn't work, waiting for the patch
+# to get into stable
+mix release prod
