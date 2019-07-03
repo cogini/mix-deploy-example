@@ -14,7 +14,7 @@ cd "$BINDIR"; BINDIR="$PWD"; cd "$CURDIR"
 DISTILLERY="${DISTILLERY:-false}"
 VERSION=$(grep -oEi 'version:\s*\"([^\"]+)\"' mix.exs | grep -oEi '\".+\"' | grep -oEi '[^\"]+')
 RELEASE_NAME="${RELEASE_NAME:-prod}"
-RELEASE_DIR="${CURDIR}/_build/${MIX_ENV}/rel/${RELEASE_NAME}"
+RELEASE_DIR="_build/${MIX_ENV}/rel/${RELEASE_NAME}"
 TAR_FILE="${RELEASE_DIR}/releases/${VERSION}/${RELEASE_NAME}.tar.gz"
 BASEDIR="$BINDIR/.."
 cd "$BASEDIR"
@@ -54,6 +54,7 @@ mix release prod --overwrite
 
 if [ "$DISTILLERY" = false ]; then
   echo "===> Creating a tarball"
+  cd "${CURDIR}"
   [ -f "${TAR_FILE}" ] && rm "${TAR_FILE}"
   tar -czf "${TAR_FILE}" "${RELEASE_DIR}"/*
 fi
