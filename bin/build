@@ -53,10 +53,9 @@ echo "===> Building release"
 mix release prod --overwrite
 
 if [ "$DISTILLERY" = false ]; then
-  echo "===> Creating a tarball"
+  echo "===> Compressing release"
   cd "${CURDIR}"
-  [ -f "${TAR_FILE}" ] && rm "${TAR_FILE}"
-  tar -czf "${TAR_FILE}" "${RELEASE_DIR}"/*
+  tar -czf "${TAR_FILE}" --exclude="${TAR_FILE}" "${RELEASE_DIR}"/*
 fi
 
 echo "Release built!"
