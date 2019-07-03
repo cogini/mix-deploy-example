@@ -55,7 +55,7 @@ mix release prod
 if [ "$DISTILLERY" = false ]; then
   echo "===> Creating a tarball"
   [ -f "${TAR_FILE}" ] && rm "${TAR_FILE}"
-  tar -czf "${TAR_FILE}" "${RELEASE_DIR}/*"
+  tar -czf "${TAR_FILE}" "${RELEASE_DIR}"/*
 fi
 
 echo "Release built!"
