@@ -11,22 +11,8 @@ defmodule MixDeployExample.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      releases: [
-        prod: [
-          include_executables_for: [:unix],
-          config_providers: [
-            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
-            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
-          ]
-        ],
-        prodaws: [
-          include_executables_for: [:unix],
-          config_providers: [
-            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
-            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
-          ]
-        ]
-      ]
+      default_release: :prod,
+      releases: releases()
     ]
   end
 
@@ -43,6 +29,23 @@ defmodule MixDeployExample.MixProject do
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
+
+  defp releases do
+    [
+      prod: [
+        include_executables_for: [:unix],
+        config_providers: [
+          {TomlConfigProvider, "/etc/mix_deploy_example/config.toml"}
+        ]
+      ],
+      prodaws: [
+        include_executables_for: [:unix],
+        config_providers: [
+          {TomlConfigProvider, "/etc/mix_deploy_example/config.toml"}
+        ]
+      ]
+    ]
+  end
 
   # Specifies your project dependencies.
   #
@@ -62,7 +65,7 @@ defmodule MixDeployExample.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:toml, "~> 0.5.2"},
+      {:toml_config_provider, "~> 0.1.0"}
     ]
   end
 
