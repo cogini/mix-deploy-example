@@ -33,16 +33,10 @@ defmodule MixDeployExample.MixProject do
   defp releases do
     [
       prod: [
-        include_executables_for: [:unix],
-        config_providers: [
-          {TomlConfigProvider, "/etc/mix_deploy_example/config.toml"}
-        ]
+        include_executables_for: [:unix]
       ],
       prodaws: [
-        include_executables_for: [:unix],
-        config_providers: [
-          {TomlConfigProvider, "/etc/mix_deploy_example/config.toml"}
-        ]
+        include_executables_for: [:unix]
       ]
     ]
   end
