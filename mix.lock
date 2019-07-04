@@ -24,5 +24,5 @@
   "ranch": {:hex, :ranch, "1.7.1", "6b1fab51b49196860b733a49c07604465a47bdb78aa10c1c16a3d199f7f8c881", [:rebar3], [], "hexpm"},
   "telemetry": {:hex, :telemetry, "0.4.0", "8339bee3fa8b91cb84d14c2935f8ecf399ccd87301ad6da6b71c09553834b2ab", [:rebar3], [], "hexpm"},
   "toml": {:hex, :toml, "0.5.2", "e471388a8726d1ce51a6b32f864b8228a1eb8edc907a0edf2bb50eab9321b526", [:mix], [], "hexpm"},
-  "toml_config_provider": {:hex, :toml_config_provider, "0.1.0", "6d6509b5f6e558985f73113b574b9870011720c0428f039b52f8cc4f32772b2f", [:mix], [{:toml, "~> 0.5.2", [hex: :toml, repo: "hexpm", optional: false]}], "hexpm"},
+  "toml_config_provider": {:hex, :toml_config_provider, "0.2.0", "fe31060d4483a6b6ebd352861938c407680f4d3ce39d2e3497e90edd7a018e4b", [:mix], [{:toml, "~> 0.5.2", [hex: :toml, repo: "hexpm", optional: false]}], "hexpm"},
 }
