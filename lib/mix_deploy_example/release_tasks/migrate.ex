@@ -12,13 +12,20 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
     ext_name = @app |> to_string |> String.replace("_", "-")
     config_dir = Path.join("/etc", ext_name)
 
+    app_env = [{@app, Application.get_all_env(@app)}]
+
     config_exs = Path.join(config_dir, "config.exs")
-    if File.exists?(config_exs) do
-      IO.puts "==> Loading config file #{config_exs}"
-      Config.Reader.read!(config_exs)
+
+    app_env = case File.exists?(config_exs) do
+      true ->
+        IO.puts "==> Loading config file #{config_exs}"
+        Config.Reader.merge(app_env, Config.Reader.read!(config_exs))
+
+      _ ->
+        app_env
     end
 
-    repo_config = Application.get_env(@app, @repo_module)
+    repo_config = Keyword.get(app_env, @app, @repo_module)
     repo_config = Keyword.put(repo_config, :adapter, Ecto.Adapters.Postgres)
     Application.put_env(@app, @repo_module, repo_config)
 
