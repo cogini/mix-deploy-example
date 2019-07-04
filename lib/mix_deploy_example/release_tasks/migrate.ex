@@ -6,6 +6,8 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
   # CHANGEME: Name of app repo module
   @repo_module MixDeployExample.Repo
 
+  import Config
+
   def run(_args) do
     ext_name = @app |> to_string |> String.replace("_", "-")
     config_dir = Path.join("/etc", ext_name)
@@ -13,13 +15,7 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
     config_exs = Path.join(config_dir, "config.exs")
     if File.exists?(config_exs) do
       IO.puts "==> Loading config file #{config_exs}"
-      Mix.Releases.Config.Providers.Elixir.init([config_exs])
-    end
-
-    config_toml = Path.join(config_dir, "config.toml")
-    if File.exists?(config_toml) do
-      IO.puts "==> Loading config file #{config_toml}"
-      Toml.Provider.init([path: config_toml])
+      import_config(config_exs)
     end
 
     repo_config = Application.get_env(@app, @repo_module)
