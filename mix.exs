@@ -5,13 +5,13 @@ defmodule MixDeployExample.MixProject do
     [
       app: :mix_deploy_example,
       version: "0.1.0",
-      elixir: "~> 1.8",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      default_release: :prod,
+      default_release: :mix_deploy_example,
       releases: releases()
     ]
   end
