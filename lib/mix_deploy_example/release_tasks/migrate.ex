@@ -6,7 +6,7 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
   # CHANGEME: Name of app repo module
   @repo_module MixDeployExample.Repo
 
-  import Config
+  def run(args \\ [])
 
   def run(_args) do
     ext_name = @app |> to_string |> String.replace("_", "-")
@@ -15,7 +15,7 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
     config_exs = Path.join(config_dir, "config.exs")
     if File.exists?(config_exs) do
       IO.puts "==> Loading config file #{config_exs}"
-      import_config(config_exs)
+      Config.Reader.read!(config_exs)
     end
 
     repo_config = Application.get_env(@app, @repo_module)
