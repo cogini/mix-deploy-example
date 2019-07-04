@@ -32,10 +32,10 @@ defmodule MixDeployExample.MixProject do
 
   defp releases do
     [
-      prod: [
+      mix_deploy_example: [
         include_executables_for: [:unix]
       ],
-      prodaws: [
+      mix_deploy_example_aws: [
         include_executables_for: [:unix]
       ]
     ]

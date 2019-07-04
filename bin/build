@@ -13,9 +13,9 @@ cd "$BINDIR"; BINDIR="$PWD"; cd "$CURDIR"
 
 DISTILLERY="${DISTILLERY:-false}"
 VERSION=$(grep -oEi 'version:\s*\"([^\"]+)\"' mix.exs | grep -oEi '\".+\"' | grep -oEi '[^\"]+')
-RELEASE_NAME="${RELEASE_NAME:-prod}"
+RELEASE_NAME="${RELEASE_NAME:-mix_deploy_example}"
 RELEASE_DIR="_build/${MIX_ENV}/rel/${RELEASE_NAME}"
-TAR_FILE="releases/${VERSION}/${RELEASE_NAME}.tar.gz"
+TARBALL="releases/${VERSION}/${RELEASE_NAME}.tar.gz"
 BASEDIR="$BINDIR/.."
 cd "$BASEDIR"
 
@@ -55,7 +55,8 @@ mix release prod --overwrite
 if [ "$DISTILLERY" = false ]; then
   echo "===> Compressing release"
   cd "${RELEASE_DIR}"
-  tar -czf "${TAR_FILE}" --exclude="${TAR_FILE}" *
+  tar -czf "${TARBALL}" --exclude="${TARBALL}" *
+  echo "Generated release tarball at ${RELEASE_DIR}/${TARBALL}"
 fi
 
 echo "Release built!"
