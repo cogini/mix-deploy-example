@@ -15,30 +15,24 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
     app_env = [{@app, Application.get_all_env(@app)}]
 
     config_exs = Path.join(config_dir, "config.exs")
-
     app_env =
-      case File.exists?(config_exs) do
-        true ->
-          IO.puts("==> Loading config file #{config_exs}")
-          Config.Reader.merge(app_env, Config.Reader.read!(config_exs))
-
-        _ ->
-          app_env
+      if File.exists?(config_exs) do
+        IO.puts("==> Loading config file #{config_exs}")
+        Config.Reader.merge(app_env, Config.Reader.read!(config_exs))
+      else
+        app_env
       end
 
     config_toml = Path.join(config_dir, "config.toml")
-
     app_env =
-      case File.exists?(config_toml) do
-        true ->
-          IO.puts("==> Loading config file #{config_toml}")
-          TomlConfigProvider.load(config, config_toml)
-
-        _ ->
+      if File.exists?(config_toml) do
+        IO.puts("==> Loading config file #{config_toml}")
+        TomlConfigProvider.load(app_env, config_toml)
+      else
           app_env
       end
 
-    repo_config = Keyword.get(app_env, @app) |> Keyword.get(@repo_module)
+    repo_config = app_env[@app][@repo_module]
     repo_config = Keyword.put(repo_config, :adapter, Ecto.Adapters.Postgres)
     Application.put_env(@app, @repo_module, repo_config)
 
