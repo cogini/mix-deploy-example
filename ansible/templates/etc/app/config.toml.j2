@@ -7,5 +7,5 @@ adapter = "{{ db_adapter }}"
 ssl = {{ db_ssl }}
 pool_size = {{ db_pool_size }}
 
-[{{ elixir_release_app_name }}."{{ elixir_release_app_module }}.Endpoint"]
+[{{ elixir_release_app_name }}."{{ elixir_release_app_module }}Web.Endpoint"]
 secret_key_base = "{{ secret_key_base }}"

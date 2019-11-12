@@ -12,18 +12,18 @@ phases:
       # You can save this work by making a custom Docker image
       - chmod +x bin/build*
       # Install Erlang, Elixir, Node.js via OS packages
-      # - bin/build-install-deps-ubuntu
+      - bin/build-install-deps-ubuntu
       # - bin/build-install-deps-centos
       #
       # Install using ASDF
       # - bin/build-install-asdf-deps-ubuntu
-      - bin/build-install-asdf-deps-centos
-      - bin/build-install-asdf-init
+      # - bin/build-install-asdf-deps-centos
+      # - bin/build-install-asdf-init
   pre_build:
     commands:
       # Install using ASDF
-      - bin/build-install-asdf
-      - source "$HOME/.asdf/asdf.sh"
+      # - bin/build-install-asdf
+      # - source "$HOME/.asdf/asdf.sh"
       # Copy config from build environment to runtime environment
       - mkdir -p rel/etc
       - echo "CONFIG_S3_BUCKET=$CONFIG_S3_BUCKET" >> rel/etc/environment
@@ -32,7 +32,7 @@ phases:
     commands:
       # Build the app
       - echo "Starting build"
-      - source "$HOME/.asdf/asdf.sh"
+      # - source "$HOME/.asdf/asdf.sh"
       - chmod +x bin/test
         # - MIX_ENV=test bin/test
       - chmod +x bin/build

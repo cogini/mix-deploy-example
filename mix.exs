@@ -5,28 +5,14 @@ defmodule MixDeployExample.MixProject do
     [
       app: :mix_deploy_example,
       version: "0.1.0",
-      elixir: "~> 1.8",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      releases: [
-        prod: [
-          include_executables_for: [:unix],
-          config_providers: [
-            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
-            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
-          ]
-        ],
-        prodaws: [
-          include_executables_for: [:unix],
-          config_providers: [
-            {Mix.Releases.Config.Providers.Elixir, ["${CONFIGURATION_DIR}/config.exs"]}
-            # {Toml.Provider, [path: "${CONFIGURATION_DIR}/config.toml"]},
-          ]
-        ]
-      ]
+      default_release: :mix_deploy_example,
+      releases: releases()
     ]
   end
 
@@ -44,6 +30,17 @@ defmodule MixDeployExample.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
+  defp releases do
+    [
+      mix_deploy_example: [
+        include_executables_for: [:unix]
+      ],
+      mix_deploy_example_aws: [
+        include_executables_for: [:unix]
+      ]
+    ]
+  end
+
   # Specifies your project dependencies.
   #
   # Type `mix help deps` for examples and options.
@@ -53,7 +50,7 @@ defmodule MixDeployExample.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:mix_deploy, github: "cogini/mix_deploy"},
+      {:mix_deploy, github: "cogini/mix_deploy", branch: "master"},
       {:mix_systemd, github: "cogini/mix_systemd", override: true},
       {:phoenix, "~> 1.4.6"},
       {:phoenix_ecto, "~> 4.0"},
@@ -62,7 +59,7 @@ defmodule MixDeployExample.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:toml, "~> 0.5.2"},
+      {:toml_config_provider, "~> 0.2.0"}
     ]
   end
 

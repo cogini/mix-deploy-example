@@ -1,0 +1,10 @@
+[mix_deploy_example."MixDeployExample.Repo"]
+username = "postgres"
+password = "postgres"
+database = "mix_deploy_example_dev"
+hostname = "localhost"
+ssl = false
+pool_size = 15
+
+[mix_deploy_example."MixDeployExampleWeb.Endpoint"]
+secret_key_base = "foobar2000"

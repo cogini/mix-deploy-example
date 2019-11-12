@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # In this file, we keep production configuration that
 # you'll likely want to automate and keep away from
