@@ -16,6 +16,10 @@ cd "$BASEDIR"
 
 echo "==> Running build task"
 
+echo "===> Installing Hex and Rebar"
+mix local.hex --force
+mix local.rebar --force
+
 echo "===> Updating Elixir libs"
 mix deps.get --only "$MIX_ENV"
 
@@ -45,4 +49,5 @@ chmod +x bin/*
 
 echo "===> Building release"
 # mix release --verbose
-mix release
+# mix release
+mix distillery.release

@@ -7,6 +7,8 @@ set -e
 # Environment vars
 export LANG="${LANG:-en_US.UTF-8}"
 
+# Optional ASDF_RELEASE
+
 echo "==> Initialize package manager and install basic utilities"
 
 # http://erlang.org/doc/installation_guide/INSTALL.html#required-utilities
@@ -29,22 +31,22 @@ brew install gpg
 
 echo "==> Install ASDF and plugins"
 
-# The following installs ASDF from git to be more consistent with Linux
-#
-# You can also use Homebrew:
-#
-# brew install asdf
-# echo -e '\n. $(brew --prefix asdf)/asdf.sh' >> ~/.bash_profile
-# echo -e '\n. $(brew --prefix asdf)/etc/bash_completion.d/asdf.bash' >> ~/.bash_profile
-
 # Install via git to be more consistent with Linux
-if [ ! -d "$HOME/.asdf" ]; then
-    echo "===> Installing ASDF"
-    git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" --branch v0.7.1
+# if [ ! -d "$HOME/.asdf" ]; then
+#     echo "===> Installing ASDF"
+#     if [ -z ${ASDF_RELEASE+x} ]; then
+#         git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf"
+#     else
+#         git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" --branch "$ASDF_RELEASE"
+#     fi
+#     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bash_profile
+#     echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.bash_profile
+# fi
 
-    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bash_profile
-    echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.bash_profile
-fi
+# Install via Homebrew
+brew install asdf
+echo -e '\n. $(brew --prefix asdf)/asdf.sh' >> ~/.bash_profile
+echo -e '\n. $(brew --prefix asdf)/etc/bash_completion.d/asdf.bash' >> ~/.bash_profile
 
 source "$HOME/.asdf/asdf.sh"
 

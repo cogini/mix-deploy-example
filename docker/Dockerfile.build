@@ -6,7 +6,7 @@ ENV UBUNTU_CODENAME=bionic \
     LANG=en_US.UTF-8 \
     DEBIAN_FRONTEND=noninteractive \
     ERL_VERSION=21.3.8.2-1 \
-    ELIXIR_VERSION=1.8.2 \
+    ELIXIR_VERSION=1.9.0 \
     ASDF=false
 
 # Base build deps

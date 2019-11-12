@@ -14,12 +14,12 @@ ELIXIR_VERSION="${ELIXIR_VERSION:-1.8.1}"
 # Make sure we have a good LANG
 export LANG="${LANG:-en_US.UTF-8}"
 
-
 echo "==> Initialize package manager and install basic utilities"
 
 echo "===> Installing EPEL repository"
-wget --no-verbose -P /tmp https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-yum install -q -y /tmp/epel-release-latest-7.noarch.rpm
+# wget --no-verbose -P /tmp https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# yum install -q -y /tmp/epel-release-latest-7.noarch.rpm
+yum install -y epel-release
 
 echo "===> Updating package repos"
 yum update -y -q

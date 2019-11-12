@@ -10,18 +10,20 @@ phases:
     commands:
       # Install build tools
       # You can save this work by making a custom Docker image
-      # - chmod +x bin/build*
+      - chmod +x bin/build*
       # Install Erlang, Elixir, Node.js via OS packages
       # - bin/build-install-deps-ubuntu
+      # - bin/build-install-deps-centos
+      #
       # Install using ASDF
-      # - bin/build-install-asdf-ubuntu
-      # - bin/build-init-asdf
-      - mix local.hex --if-missing --force
-      - mix local.rebar --if-missing --force
+      # - bin/build-install-asdf-deps-ubuntu
+      - bin/build-install-asdf-deps-centos
+      - bin/build-install-asdf-init
   pre_build:
     commands:
       # Install using ASDF
-      # - bin/build-install-asdf
+      - bin/build-install-asdf
+      - source "$HOME/.asdf/asdf.sh"
       # Copy config from build environment to runtime environment
       - mkdir -p rel/etc
       - echo "CONFIG_S3_BUCKET=$CONFIG_S3_BUCKET" >> rel/etc/environment
@@ -30,11 +32,15 @@ phases:
     commands:
       # Build the app
       - echo "Starting build"
+      - source "$HOME/.asdf/asdf.sh"
+      - chmod +x bin/test
+        # - MIX_ENV=test bin/test
       - chmod +x bin/build
       - bin/build
   post_build:
     commands:
       # Stage build files for CodeDeploy
+      - chmod +x bin/deploy-stage-files
       - bin/deploy-stage-files
       # Sync static assets to S3 bucket for CloudFront
       - bin/deploy-sync-assets-s3
@@ -51,8 +57,10 @@ cache:
     # Mix packages
     - '/root/.mix/**/*'
     # ASDF packages
-    # - '/root/.asdf/**/*'
+    - '/root/.asdf/**/*'
     # Node keys
-    # - '/root/.gpg/**/*'
+    - '/root/.gpg/**/*'
+    # Build files
+    - '_build/**/*'
     # OS packages
     # - '/var/cache/apt/archives/**/*'
