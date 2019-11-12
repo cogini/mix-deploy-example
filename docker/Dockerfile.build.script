@@ -1,0 +1,14 @@
+FROM ubuntu:bionic
+
+USER root
+
+ENV UBUNTU_CODENAME=bionic \
+    LANG=en_US.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive \
+    ERL_VERSION=21.3.8.2-1 \
+    ELIXIR_VERSION=1.8.2
+
+RUN mkdir -p /build/bin
+WORKDIR /build
+COPY bin/build-install-deps-ubuntu /build/bin
+RUN bin/build-install-deps-ubuntu
