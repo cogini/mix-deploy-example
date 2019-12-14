@@ -32,12 +32,15 @@ environment :dev do
   set dev_mode: true
   set include_erts: false
   set cookie: :"Z)(SD?uO<^!K.q!Ci7}7a]4$p?^y:x^%K}wu&cg%)WPhoBS{KHTWtM56.L;7H}/b"
+  # set cookie: :crypto.strong_rand_bytes(32) |> Base.encode16 |> String.to_atom
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"pRlPiv!OOD6@zc(%Du^>T19IH]2NQA0}$f9q10E<>UZ`K!dk.G6/4HV]!>3mRi.k"
+  # set cookie: :crypto.strong_rand_bytes(32) |> Base.encode16 |> String.to_atom
+  # set cookie: File.read!("config/cookie.txt") |> String.to_atom
   set vm_args: "rel/vm.args"
 
   set config_providers: [
@@ -49,11 +52,11 @@ environment :prod do
     migrate: "rel/commands/migrate.sh"
   ]
 
-  set overlays: [
-    {:mkdir, "etc"},
-    {:copy, "rel/etc/environment", "etc/environment"},
-    # {:template, "rel/etc/environment", "etc/environment"}
-  ]
+  # set overlays: [
+  #   {:mkdir, "etc"},
+  #   {:copy, "rel/etc/environment", "etc/environment"},
+  #   # {:template, "rel/etc/environment", "etc/environment"}
+  # ]
 end
 
 environment :prodaws do
@@ -71,11 +74,11 @@ environment :prodaws do
     migrate: "rel/commands/migrate.sh"
   ]
 
-  set overlays: [
-    {:mkdir, "etc"},
-    {:copy, "rel/etc/environment", "etc/environment"},
-    # {:template, "rel/etc/environment", "etc/environment"}
-  ]
+  # set overlays: [
+  #   {:mkdir, "etc"},
+  #   {:copy, "rel/etc/environment", "etc/environment"},
+  #   # {:template, "rel/etc/environment", "etc/environment"}
+  # ]
 end
 
 # You may define one or more releases in this file.
