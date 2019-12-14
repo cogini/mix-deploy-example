@@ -8,8 +8,8 @@ set -e
 
 # In order to make things more predictable, install specific versions of
 # Erlang and Elixir rather than just taking the latest available
-ERL_VERSION="${ERL_VERSION:-21.3.8.2-1}"
-ELIXIR_VERSION="${ELIXIR_VERSION:-1.9.0}"
+ERL_VERSION="${ERL_VERSION:-22.2-1}"
+ELIXIR_VERSION="${ELIXIR_VERSION:-1.9.4}"
 
 # Make sure we have a good LANG
 export LANG="${LANG:-en_US.UTF-8}"
