@@ -43,7 +43,7 @@ phases:
       - chmod +x bin/deploy-stage-files
       - bin/deploy-stage-files
       # Sync static assets to S3 bucket for CloudFront
-      - bin/deploy-sync-assets-s3
+      - bin/sync-assets-s3
 artifacts:
   files:
     - '**/*'
