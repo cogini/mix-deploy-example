@@ -5,7 +5,7 @@ USER root
 ENV UBUNTU_CODENAME=bionic \
     LANG=en_US.UTF-8 \
     DEBIAN_FRONTEND=noninteractive \
-    ERL_VERSION=22.1.6-1 \
+    ERL_VERSION=22.2-1 \
     ELIXIR_VERSION=1.9.4 \
     ASDF=false
 
