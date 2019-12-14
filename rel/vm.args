@@ -1,12 +1,13 @@
 ## This file provide the arguments provided to the VM at startup
 ## You can find a full list of flags and their behaviours at
 ## http://erlang.org/doc/man/erl.html
+## -mode/-name/-sname/-setcookie are configured via env vars, do not set them here
 
-## Name of the node
--name <%= release_name %>@127.0.0.1
+# ## Name of the node
+# -name <%= release_name %>@127.0.0.1
 
-## Cookie for distributed erlang
--setcookie <%= release.profile.cookie %>
+# ## Cookie for distributed erlang
+# -setcookie <%= release.profile.cookie %>
 
 ## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
 ## (Disabled by default..use with caution!)
