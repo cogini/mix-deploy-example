@@ -91,7 +91,7 @@ config :mix_systemd,
     "REPLACE_OS_VARS=true",
   ],
   exec_start_pre: [
-    "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
+    "!/srv/mix-deploy-example/bin/sync-config-s3"
   ]
 
 # Finally import the config/prod.secret.exs which should be versioned
