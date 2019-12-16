@@ -21,7 +21,7 @@ EOT
 # counter=1
 # while !( $CURL_CMD ); do
 #   if [ $counter -lt 10 ]
-#   then  
+#   then
 #     ((counter++))
 #     sleep 1
 #   else
