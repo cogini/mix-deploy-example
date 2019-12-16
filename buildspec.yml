@@ -43,7 +43,7 @@ phases:
       # Stage build files for CodeDeploy
       - chmod +x bin/deploy-stage-files
       - bin/deploy-stage-files
-      - cat _build/$MIX_ENV/systemd/lib/systemd/system/mix-deploy-example.service
+      - cat files/systemd/mix-deploy-example.service
       # Sync static assets to S3 bucket for CloudFront
       - bin/sync-assets-s3
 artifacts:
@@ -63,6 +63,6 @@ cache:
     # Node keys
     - '/root/.gpg/**/*'
     # Build files
-    - '_build/**/*'
+    # - '_build/**/*'
     # OS packages
     # - '/var/cache/apt/archives/**/*'
