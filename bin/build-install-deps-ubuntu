@@ -50,7 +50,7 @@ wget --no-verbose -P /tmp/ "https://packages.erlang-solutions.com/erlang/debian/
 dpkg -i "/tmp/esl-erlang_${ERL_VERSION}~ubuntu~${UBUNTU_CODENAME}_amd64.deb"
 
 echo "===> Installing Elixir ${ELIXIR_VERSION}"
-wget --no-verbose -P /tmp/ "https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip"
+wget --no-verbose "https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip" -O /tmp/Precompiled.zip
 unzip -qo /tmp/Precompiled.zip -d /usr/local
 
 echo "===> Installing Node.js"
