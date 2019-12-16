@@ -80,21 +80,24 @@ config :phoenix, :serve_endpoints, true
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
-config :mix_deploy,
-  app_user: "app",
-  app_group: "app",
-  restart_method: :systemctl,
-  service_type: :exec
-
 config :mix_systemd,
   app_user: "app",
   app_group: "app",
+  restart_method: :systemctl,
+  service_type: :exec,
   env_vars: [
     "REPLACE_OS_VARS=true",
   ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
   ]
+
+config :mix_deploy,
+  app_user: "app",
+  app_group: "app",
+  restart_method: :systemctl,
+  service_type: :exec
+
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
