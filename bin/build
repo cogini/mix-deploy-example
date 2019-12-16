@@ -20,6 +20,13 @@ TARBALL="releases/${VERSION}/${RELEASE_NAME}.tar.gz"
 BASEDIR="$BINDIR/.."
 cd "$BASEDIR"
 
+export DOMAIN_NAME="${DOMAIN_NAME:-rubegoldberg.io}"
+export HOST_NAME="${HOST_NAME:-www}"
+export HOST="${HOST_NAME}.${DOMAIN_NAME}"
+export ASSETS_HOST="assets.${DOMAIN_NAME}"
+export PORT=4000
+export HTTPS_PORT=4001
+
 echo "==> Running build task"
 
 echo "===> Installing Hex and Rebar"

@@ -13,7 +13,7 @@ config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
   # http: [:inet6, port: {:system, "PORT"}],
   https: [
-    port: System.get_env("PORT") || 4001,
+    port: System.get_env("HTTPS_PORT") || 4001,
     cipher_suite: :strong,
     keyfile: "/etc/mix-deploy-example/ssl/app-https.key",
     certfile: "/etc/mix-deploy-example/ssl/app-https.cert.pem",
