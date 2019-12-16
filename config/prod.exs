@@ -80,7 +80,9 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_deploy,
   app_user: "app",
-  app_group: "app"
+  app_group: "app",
+  restart_method: :systemctl,
+  service_type: :exec
 
 config :mix_systemd,
   app_user: "app",
@@ -88,6 +90,7 @@ config :mix_systemd,
   env_vars: [
     "REPLACE_OS_VARS=true",
   ]
+
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.

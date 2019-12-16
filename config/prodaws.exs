@@ -82,7 +82,9 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_deploy,
   app_user: "app",
-  app_group: "app"
+  app_group: "app",
+  restart_method: :systemctl,
+  service_type: :exec
 
 config :mix_systemd,
   app_user: "app",
