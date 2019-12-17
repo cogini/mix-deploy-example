@@ -83,14 +83,14 @@ config :phoenix, :serve_endpoints, true
 config :mix_systemd,
   app_user: "app",
   app_group: "app",
-  restart_method: :systemctl,
   service_type: :exec,
   env_vars: [
     "REPLACE_OS_VARS=true",
+    "HOME=/home/app"
+  ],
+  exec_start_pre: [
+    "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
   ]
-  # exec_start_pre: [
-  #   "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
-  # ]
 
 config :mix_deploy,
   app_user: "app",

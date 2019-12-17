@@ -78,18 +78,20 @@ config :phoenix, :serve_endpoints, true
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
+config :mix_systemd,
+  app_user: "app",
+  app_group: "app",
+  service_type: :exec,
+  env_vars: [
+    "REPLACE_OS_VARS=true",
+    "HOME=/home/app"
+  ]
+
 config :mix_deploy,
   app_user: "app",
   app_group: "app",
   restart_method: :systemctl,
   service_type: :exec
-
-config :mix_systemd,
-  app_user: "app",
-  app_group: "app",
-  env_vars: [
-    "REPLACE_OS_VARS=true",
-  ]
 
 
 # Finally import the config/prod.secret.exs which should be versioned
