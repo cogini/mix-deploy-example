@@ -12,14 +12,17 @@ BINDIR=$(dirname "$0")
 cd "$BINDIR"; BINDIR="$PWD"; cd "$CURDIR"
 
 DISTILLERY="${DISTILLERY:-false}"
+# TODO: RELEASE_VSN set by Elixir 1.9 releases
 VERSION=$(grep -oEi 'version:\s*\"([^\"]+)\"' mix.exs | grep -oEi '\".+\"' | grep -oEi '[^\"]+')
 ERTS_VERSION=$(erl -noshell -eval 'io:fwrite("~s\n", [erlang:system_info(version)]).' -s erlang halt)
+# TODO: RELEASE_NAME set by Elixir 1.9 releases
 RELEASE_NAME="${RELEASE_NAME:-mix_deploy_example}"
 RELEASE_DIR="_build/${MIX_ENV}/rel/${RELEASE_NAME}"
 TARBALL="releases/${VERSION}/${RELEASE_NAME}.tar.gz"
 BASEDIR="$BINDIR/.."
 cd "$BASEDIR"
 
+# These come from build env
 export DOMAIN_NAME="${DOMAIN_NAME:-rubegoldberg.io}"
 export HOST_NAME="${HOST_NAME:-www}"
 export HOST="${HOST_NAME}.${DOMAIN_NAME}"
