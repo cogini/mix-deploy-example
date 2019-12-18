@@ -28,7 +28,7 @@ phases:
       - mkdir -p rel/etc
       - echo "ASSETS_S3_BUCKET=$BUCKET_ASSETS" >> rel/etc/environment
       - echo "CONFIG_S3_BUCKET=$BUCKET_CONFIG" >> rel/etc/environment
-      # - echo "CONFIG_S3_PREFIX=\"\"" >> rel/etc/environment
+      - echo "CONFIG_S3_PREFIX=app/" >> rel/etc/environment
   build:
     commands:
       # Build the app
