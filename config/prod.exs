@@ -82,6 +82,7 @@ config :mix_systemd,
   app_user: "app",
   app_group: "app",
   service_type: :exec,
+  distillery: true,
   env_vars: [
     "REPLACE_OS_VARS=true",
     "HOME=/home/app"
