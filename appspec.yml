@@ -49,5 +49,5 @@ hooks:
     - location: bin/deploy-start
       timeout: 3600
   # ValidateService:
-  #   - location: bin/validate-service
-  #     timeout: 3600
+    - location: bin/validate-service
+      timeout: 300
