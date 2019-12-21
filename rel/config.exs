@@ -74,11 +74,11 @@ environment :prodaws do
     migrate: "rel/commands/migrate.sh"
   ]
 
-  set overlays: [
-    {:mkdir, "etc"},
-    {:copy, "rel/etc/environment", "etc/environment"},
-    # {:template, "rel/etc/environment", "etc/environment"}
-  ]
+  # set overlays: [
+  #   {:mkdir, "etc"},
+  #   {:copy, "rel/etc/environment", "etc/environment"},
+  #   # {:template, "rel/etc/environment", "etc/environment"}
+  # ]
 end
 
 # You may define one or more releases in this file.

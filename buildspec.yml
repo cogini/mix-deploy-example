@@ -24,6 +24,11 @@ phases:
       # Install using ASDF
       # - bin/build-install-asdf
       # - source "$HOME/.asdf/asdf.sh"
+      # Copy config from build environment to runtime environment
+      # - mkdir -p rel/etc
+      # - echo "ASSETS_S3_BUCKET=$BUCKET_ASSETS" >> rel/etc/environment
+      # - echo "CONFIG_S3_BUCKET=$BUCKET_CONFIG" >> rel/etc/environment
+      # - echo "CONFIG_S3_PREFIX=app/" >> rel/etc/environment
   build:
     commands:
       # Build the app
