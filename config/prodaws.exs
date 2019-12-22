@@ -81,6 +81,7 @@ config :phoenix, :serve_endpoints, true
 # See the releases documentation accordingly.
 
 config :mix_systemd,
+  release_system: :distillery,
   app_user: "app",
   app_group: "app",
   distillery: true,
@@ -93,6 +94,7 @@ config :mix_systemd,
   ]
 
 config :mix_deploy,
+  release_system: :distillery,
   app_user: "app",
   app_group: "app",
   restart_method: :systemctl,
