@@ -85,12 +85,12 @@ config :mix_systemd,
   app_user: "app",
   app_group: "app",
   env_lang: "C.UTF-8",
-  # env_vars: [
+  env_vars: [
   #   "REPLACE_OS_VARS=true",
   #   "HOME=/home/app",
   #   {"RELEASE_MUTABLE_DIR", :runtime_dir},
-  #   {"RELEASE_TMP", :runtime_dir}
-  # ],
+    {"RELEASE_TMP", :runtime_dir}
+  ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
   ]
