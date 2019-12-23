@@ -84,6 +84,7 @@ config :mix_systemd,
   # release_system: :distillery,
   app_user: "app",
   app_group: "app",
+  env_lang: "C.UTF-8",
   # env_vars: [
   #   "REPLACE_OS_VARS=true",
   #   "HOME=/home/app",
