@@ -65,18 +65,7 @@ mix deploy.generate
 chmod +x bin/*
 
 echo "===> Building release"
-# mix release --verbose
+# Elixir 1.9+
 mix release --overwrite
-# mix distillery.release
-
-# # In 1.9.0, the `:default_release` option doesn't work, waiting for the patch
-# # to get into stable
-# mix release $RELEASE_NAME --overwrite
-
-# if [ "$DISTILLERY" = false ]; then
-#   echo "===> Compressing release"
-#   cd "${RELEASE_DIR}"
-#   chmod 754 "bin/${RELEASE_NAME}" "releases/${VERSION}"/{elixir,iex} "erts-${ERTS_VERSION}/bin/erl"
-#   tar -czf "${TARBALL}" --exclude="${TARBALL}" *
-#   echo "Generated release tarball at ${RELEASE_DIR}/${TARBALL}"
-# fi
+# Distillery
+# mix distillery.release --verbose
