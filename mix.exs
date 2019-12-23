@@ -64,8 +64,7 @@ defmodule MixDeployExample.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:toml_config, "~> 0.1"}, # Mix releases
-      {:toml_config_provider, "~> 0.2.0"}, # Distillery
+      {:toml_config, "~> 0.1.0"}, # Mix releases
     ]
   end
 
