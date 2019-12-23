@@ -66,6 +66,6 @@ chmod +x bin/*
 
 echo "===> Building release"
 # Elixir 1.9+
-# mix release --overwrite
+mix release --overwrite
 # Distillery
-mix distillery.release --verbose
+# mix distillery.release
