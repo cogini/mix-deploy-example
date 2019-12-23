@@ -33,7 +33,10 @@ defmodule MixDeployExample.MixProject do
   defp releases do
     [
       mix_deploy_example: [
-        include_executables_for: [:unix]
+        include_executables_for: [:unix],
+        config_providers: [
+          {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
+        ],
       ],
       mix_deploy_example_aws: [
         include_executables_for: [:unix]
@@ -61,7 +64,8 @@ defmodule MixDeployExample.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:toml_config_provider, "~> 0.2.0"}
+      {:toml_config, "~> 0.1"}, # Mix releases
+      {:toml_config_provider, "~> 0.2.0"}, # Distillery
     ]
   end
 

@@ -87,7 +87,9 @@ config :mix_systemd,
   distillery: true,
   env_vars: [
     "REPLACE_OS_VARS=true",
-    "HOME=/home/app"
+    "HOME=/home/app",
+    {"RELEASE_MUTABLE_DIR", :runtime_dir},
+    {"RELEASE_TMP", :runtime_dir}
   ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
@@ -99,7 +101,6 @@ config :mix_deploy,
   app_group: "app",
   restart_method: :systemctl,
   service_type: :exec
-
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
