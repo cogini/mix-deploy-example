@@ -37,6 +37,7 @@ defmodule MixDeployExample.MixProject do
         config_providers: [
           {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
         ],
+        steps: [:assemble, :tar]
       ],
       mix_deploy_example_aws: [
         include_executables_for: [:unix]
