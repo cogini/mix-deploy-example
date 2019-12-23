@@ -12,18 +12,20 @@ use Mix.Config
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
   # http: [:inet6, port: {:system, "PORT"}],
-  # https: [
-  #   port: System.get_env("PORT") || 4001,
-  #   cipher_suite: :strong,
-  #   keyfile: "/etc/mix-deploy-example/ssl/app-https.key",
-  #   certfile: "/etc/mix-deploy-example/ssl/app-https.cert.pem",
-  #   # cacertfile: "/etc/mix-deploy-example/ssl/app-https.cacert.pem",
-  #   # dhfile: "/etc/mix-deploy-example/ssl/app-https.dh.pem",
-  # ],
+  https: [
+    port: System.get_env("HTTPS_PORT") || 4001,
+    cipher_suite: :strong,
+    keyfile: "/etc/mix-deploy-example/ssl/app-https.key",
+    certfile: "/etc/mix-deploy-example/ssl/app-https.cert.pem",
+    # cacertfile: "/etc/mix-deploy-example/ssl/app-https.cacert.pem",
+    # dhfile: "/etc/mix-deploy-example/ssl/app-https.dh.pem",
+  ],
   # force_ssl: [rewrite_on: [:x_forwarded_proto]],
   # force_ssl: [hsts: true],
   # url: [host: {:system, "HOST"}, port: 80],
   # static_url: [host: {:system, "ASSETS_HOST"}, port: 443],
+  url: [host: System.get_env("HOST"), port: 443],
+  static_url: [host: System.get_env("ASSETS_HOST"), port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -79,21 +81,24 @@ config :phoenix, :serve_endpoints, true
 # See the releases documentation accordingly.
 
 config :mix_systemd,
+  release_system: :distillery,
   app_user: "app",
   app_group: "app",
   service_type: :exec,
   distillery: true,
   env_vars: [
     "REPLACE_OS_VARS=true",
-    "HOME=/home/app"
+    "HOME=/home/app",
+    {"RELEASE_MUTABLE_DIR", :runtime_dir},
+    {"RELEASE_TMP", :runtime_dir}
   ]
 
 config :mix_deploy,
+  release_system: :distillery,
   app_user: "app",
   app_group: "app",
   restart_method: :systemctl,
   service_type: :exec
-
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
