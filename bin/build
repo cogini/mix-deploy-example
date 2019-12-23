@@ -66,8 +66,8 @@ chmod +x bin/*
 
 echo "===> Building release"
 # mix release --verbose
-# mix release
-mix distillery.release
+mix release --overwrite
+# mix distillery.release
 
 # # In 1.9.0, the `:default_release` option doesn't work, waiting for the patch
 # # to get into stable
