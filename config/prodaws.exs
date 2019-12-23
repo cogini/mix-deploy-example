@@ -99,9 +99,7 @@ config :mix_systemd,
 config :mix_deploy,
   release_system: :distillery,
   app_user: "app",
-  app_group: "app",
-  restart_method: :systemctl,
-  service_type: :exec
+  app_group: "app"
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
