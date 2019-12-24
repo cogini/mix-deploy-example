@@ -82,9 +82,9 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_systemd,
   # release_system: :distillery,
-  exec_start_pre: [
-    "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
-  ],
+  # exec_start_pre: [
+  #   "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
+  # ],
   # env_vars: [
   # #   "REPLACE_OS_VARS=true",
   # #   "HOME=/home/app",
