@@ -12,7 +12,7 @@
   "gettext": {:hex, :gettext, "0.17.1", "8baab33482df4907b3eae22f719da492cee3981a26e649b9c2be1c0192616962", [:mix], [], "hexpm"},
   "jason": {:hex, :jason, "1.1.2", "b03dedea67a99223a2eaf9f1264ce37154564de899fd3d8b9a21b1a6fd64afe7", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},
   "mime": {:hex, :mime, "1.3.1", "30ce04ab3175b6ad0bdce0035cba77bba68b813d523d1aac73d9781b4d193cf8", [:mix], [], "hexpm"},
-  "mix_deploy": {:git, "https://github.com/cogini/mix_deploy.git", "2c3d27280116a62ac8e24543e56f5ddc35b0edc7", [branch: "master"]},
+  "mix_deploy": {:git, "https://github.com/cogini/mix_deploy.git", "66767d49360e1bf2548600bf955de8fc7d4b72a4", [branch: "master"]},
   "mix_systemd": {:git, "https://github.com/cogini/mix_systemd.git", "931b8cbf0b73385557fb34ed4698f53bf5a84309", []},
   "phoenix": {:hex, :phoenix, "1.4.11", "d112c862f6959f98e6e915c3b76c7a87ca3efd075850c8daa7c3c7a609014b0d", [:mix], [{:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}, {:phoenix_pubsub, "~> 1.1", [hex: :phoenix_pubsub, repo: "hexpm", optional: false]}, {:plug, "~> 1.8.1 or ~> 1.9", [hex: :plug, repo: "hexpm", optional: false]}, {:plug_cowboy, "~> 1.0 or ~> 2.0", [hex: :plug_cowboy, repo: "hexpm", optional: true]}, {:telemetry, "~> 0.4", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm"},
   "phoenix_ecto": {:hex, :phoenix_ecto, "4.1.0", "a044d0756d0464c5a541b4a0bf4bcaf89bffcaf92468862408290682c73ae50d", [:mix], [{:ecto, "~> 3.0", [hex: :ecto, repo: "hexpm", optional: false]}, {:phoenix_html, "~> 2.9", [hex: :phoenix_html, repo: "hexpm", optional: true]}, {:plug, "~> 1.0", [hex: :plug, repo: "hexpm", optional: false]}], "hexpm"},
