@@ -89,7 +89,7 @@ config :mix_systemd,
   #   "REPLACE_OS_VARS=true",
   #   "HOME=/home/app",
   #   {"RELEASE_MUTABLE_DIR", :runtime_dir},
-    {"RELEASE_TMP", :runtime_dir}
+    # {"RELEASE_TMP", :runtime_dir}
   ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
