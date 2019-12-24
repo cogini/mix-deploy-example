@@ -82,18 +82,17 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_systemd,
   # release_system: :distillery,
-  app_user: "app",
-  app_group: "app",
-  env_lang: "C.UTF-8",
-  env_vars: [
-  #   "REPLACE_OS_VARS=true",
-  #   "HOME=/home/app",
-  #   {"RELEASE_MUTABLE_DIR", :runtime_dir},
-    # {"RELEASE_TMP", :runtime_dir}
-  ],
   exec_start_pre: [
     "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
-  ]
+  ],
+  # env_vars: [
+  # #   "REPLACE_OS_VARS=true",
+  # #   "HOME=/home/app",
+  # #   {"RELEASE_MUTABLE_DIR", :runtime_dir},
+  #   # {"RELEASE_TMP", :runtime_dir}
+  # ],
+  app_user: "app",
+  app_group: "app"
 
 config :mix_deploy,
   # release_system: :distillery,
