@@ -41,7 +41,10 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 
+/config/environment
+
 # Ignore templates and generated scripts from mix_systemd and mix_deploy
 /rel/templates/systemd/*
 /rel/templates/deploy/*
 /bin/deploy-*
+/rel/etc
