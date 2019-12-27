@@ -35,8 +35,8 @@ defmodule MixDeployExample.MixProject do
       mix_deploy_example: [
         include_executables_for: [:unix],
         config_providers: [
-          # {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
-          {TomlConfigProvider, path: "/srv/mix-deploy-example/etc/config.toml"}
+          {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
+          # {TomlConfigProvider, path: "/srv/mix-deploy-example/etc/config.toml"}
         ],
         steps: [:assemble, :tar]
       ],
