@@ -56,7 +56,7 @@ defmodule MixDeployExample.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      # {:mix_deploy, "~> 0.5.0"},
+      # {:mix_deploy, "~> 0.7.0"},
       {:mix_deploy, github: "cogini/mix_deploy", branch: "master"},
       {:mix_systemd, github: "cogini/mix_systemd", override: true},
       {:phoenix, "~> 1.4.6"},

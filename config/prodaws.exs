@@ -84,20 +84,78 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_systemd,
   # release_system: :distillery,
-  # exec_start_pre: [
-  #   "!/srv/mix-deploy-example/bin/deploy-sync-config-s3"
-  # ],
-  # env_vars: [
-  # #   "REPLACE_OS_VARS=true",
-  # #   "HOME=/home/app",
-  # #   {"RELEASE_MUTABLE_DIR", :runtime_dir},
-  #   # {"RELEASE_TMP", :runtime_dir}
-  # ],
+  exec_start_pre: [
+    ["!", :deploy_dir, "/bin/deploy-sync-config-s3"]
+  ],
+  dirs: [
+    :configuration,
+    :runtime,
+  ],
+  runtime_directory_preserve: "yes",
+  env_files: [
+    ["-", :deploy_dir, "/etc/environment"],
+    ["-", :configuration_dir, "/environment"],
+  ],
+  env_vars: [
+    ["RELEASE_TMP=", :runtime_dir],
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
+    # "HOME=/home/app",
+  ],
   app_user: "app",
   app_group: "app"
 
 config :mix_deploy,
   # release_system: :distillery,
+  templates: [
+    # CodeDeploy
+    "stop",
+    "create-users",
+    "create-dirs",
+    "clean-target",
+    "extract-release",
+    "set-perms",
+    "migrate",
+    "enable",
+    "start",
+    "restart",
+
+    # CodeBuild
+    "stage-files",
+
+    # Local deploy
+    "init-local",
+    "copy-files",
+    "release",
+    "rollback",
+
+    # Release commands
+    "set-env",
+    "remote-console",
+    "migrate",
+
+    # Runtime environment
+    "sync-config-s3",
+    "runtime-environment-file",
+    "runtime-environment-wrap",
+    "set-cookie-ssm",
+  ],
+  env_files: [
+    ["-", :deploy_dir, "/etc/environment"],
+    ["-", :configuration_dir, "/environment"],
+  ],
+  env_vars: [
+    ["RELEASE_TMP=", :runtime_dir],
+  ],
+  copy_files: [
+    %{
+      src: "rel/etc/environment",
+      dst: [:deploy_dir, "/etc"],
+      user: "$DEPLOY_USER",
+      group: "$APP_GROUP",
+      mode: "640"
+    },
+  ],
   app_user: "app",
   app_group: "app"
 

@@ -49,7 +49,7 @@ phases:
       - echo "CONFIG_S3_BUCKET=$BUCKET_CONFIG" >> files/etc/environment
       - echo "CONFIG_S3_PREFIX=app/" >> files/etc/environment
       # Sync static assets to S3 bucket for CloudFront
-      - bin/sync-assets-s3
+      - aws s3 sync --no-progress priv/static "s3://$BUCKET_ASSETS"
 artifacts:
   files:
     - '**/*'
