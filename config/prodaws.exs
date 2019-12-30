@@ -84,7 +84,7 @@ config :phoenix, :serve_endpoints, true
 # See the releases documentation accordingly.
 
 config :mix_systemd,
-  # release_system: :distillery,
+  release_system: :distillery,
   exec_start_pre: [
     ["!", :deploy_dir, "/bin/deploy-sync-config-s3"]
   ],
@@ -106,7 +106,7 @@ config :mix_systemd,
   app_group: "app"
 
 config :mix_deploy,
-  # release_system: :distillery,
+  release_system: :distillery,
   templates: [
     # CodeDeploy
     "stop",
