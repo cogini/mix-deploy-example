@@ -84,7 +84,7 @@ config :phoenix, :serve_endpoints, true
 # See the releases documentation accordingly.
 
 config :mix_systemd,
-  release_system: :distillery,
+  # release_system: :distillery,
   exec_start_pre: [
     ["!", :deploy_dir, "/bin/deploy-sync-config-s3"]
   ],
@@ -99,14 +99,15 @@ config :mix_systemd,
   ],
   env_vars: [
     ["RELEASE_TMP=", :runtime_dir],
-    ["RELEASE_MUTABLE_DIR=", :runtime_dir],
-    "REPLACE_OS_VARS=true",
+    # Distillery
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
   ],
   app_user: "app",
   app_group: "app"
 
 config :mix_deploy,
-  release_system: :distillery,
+  # release_system: :distillery,
   templates: [
     # CodeDeploy
     "stop",
@@ -146,8 +147,9 @@ config :mix_deploy,
   ],
   env_vars: [
     ["RELEASE_TMP=", :runtime_dir],
-    ["RELEASE_MUTABLE_DIR=", :runtime_dir],
-    "REPLACE_OS_VARS=true",
+    # Distillery
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
   ],
   copy_files: [
     %{
