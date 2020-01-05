@@ -1,0 +1,72 @@
+version: 0.2
+
+env:
+  variables:
+    MIX_ENV: "prodaws"
+
+# https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+phases:
+  install:
+    commands:
+      # Install build tools
+      # You can save this work by making a custom Docker image
+      - chmod +x bin/build*
+      # Install Erlang, Elixir, Node.js via OS packages
+      - bin/build-install-deps-ubuntu
+      # - bin/build-install-deps-centos
+      #
+      # Install using ASDF
+      # - bin/build-install-asdf-deps-ubuntu
+      # - bin/build-install-asdf-deps-centos
+      # - bin/build-install-asdf-init
+  pre_build:
+    commands:
+      # Install using ASDF
+      # - bin/build-install-asdf
+      # - source "$HOME/.asdf/asdf.sh"
+      # Copy config from build environment to runtime environment
+      # - mkdir -p rel/etc
+      # - echo "ASSETS_S3_BUCKET=$BUCKET_ASSETS" >> rel/etc/environment
+      # - echo "CONFIG_S3_BUCKET=$BUCKET_CONFIG" >> rel/etc/environment
+      # - echo "CONFIG_S3_PREFIX=app/" >> rel/etc/environment
+  build:
+    commands:
+      # Build the app
+      - echo "Starting build"
+      # - source "$HOME/.asdf/asdf.sh"
+      - chmod +x bin/test
+        # - MIX_ENV=test bin/test
+      - chmod +x bin/build
+      - bin/build
+  post_build:
+    commands:
+      # Stage build files for CodeDeploy
+      - chmod +x bin/deploy-stage-files
+      - bin/deploy-stage-files
+      # Configure environment vars
+      - mkdir -p files/etc
+      # - echo "ASSETS_S3_BUCKET=$BUCKET_ASSETS" >> files/etc/environment
+      - echo "CONFIG_S3_BUCKET=$BUCKET_CONFIG" >> files/etc/environment
+      - echo "CONFIG_S3_PREFIX=app/" >> files/etc/environment
+      # Sync static assets to S3 bucket for CloudFront
+      # - aws s3 sync --no-progress priv/static "s3://$BUCKET_ASSETS"
+artifacts:
+  files:
+    - '**/*'
+  base-directory: files
+cache:
+  paths:
+    # deps
+    - 'deps/**/*'
+    # npm libraries for asset pipeline
+    - 'assets/node_modules/**/*'
+    # Mix packages
+    - '/root/.mix/**/*'
+    # ASDF packages
+    - '/root/.asdf/**/*'
+    # Node keys
+    - '/root/.gpg/**/*'
+    # Build files
+    # - '_build/**/*'
+    # OS packages
+    # - '/var/cache/apt/archives/**/*'
