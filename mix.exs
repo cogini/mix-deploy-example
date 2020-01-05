@@ -32,7 +32,7 @@ defmodule MixDeployExample.MixProject do
 
   defp releases do
     [
-      prodaws: [
+      mix_deploy_example: [
         include_executables_for: [:unix],
         config_providers: [
           {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}

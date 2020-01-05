@@ -108,7 +108,7 @@ config :mix_systemd,
 
 config :mix_deploy,
   # release_system: :distillery,
-  release_name: Mix.env(),
+  # release_name: Mix.env(),
   templates: [
     # CodeDeploy
     "stop",
