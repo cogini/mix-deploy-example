@@ -105,8 +105,7 @@ sudo bin/deploy-restart
 # Preparing an existing project for deployment
 
 Following are the steps used to set up this repo. You can do the same to add
-it to your own project. This repo is built as a series of git commits, so you
-can see how it works step by step.
+it to your own project.
 
 ## Generate Phoenix project
 
@@ -119,18 +118,40 @@ cd assets && npm install && node node_modules/webpack/bin/webpack.js --mode deve
 - Add `mix.lock` to git
 - Add `package-lock.json` to git
 
-## Install and configure Distillery
+## Configure Elixir 1.9+ mix releases
+
+Configure releases in `mix.exs`:
+
+```elixir
+defp releases do
+  [
+    mix_deploy_example: [
+      include_executables_for: [:unix],
+      # config_providers: [
+      #   {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
+      # ],
+      steps: [:assemble, :tar]
+    ],
+  ]
+end
+```
+
+Configure `rel/env.sh.eex` and `rel/vm.args.eex` if necessary.
+
+See [the docs](https://hexdocs.pm/mix/Mix.Tasks.Release.html) for more details.
+
+## Install and configure Distillery (optional)
 
 Add library to deps:
 
 ```elixir
-{:distillery, "~> 2.0"}
+{:distillery, "~> 2.1"}
 ```
 
 Generate initial distillery config files in the `rel` dir:
 
 ```shell
-mix release.init
+mix distillery.init
 ```
 
 Add `rel` dir to git.
@@ -156,8 +177,7 @@ Add `config/prod.secret.exs.sample` file.
 Add libraries to deps from Hex:
 
 ```elixir
-{:mix_systemd, "~> 0.1.0"},
-{:mix_deploy, "~> 0.1.0"}
+{:mix_deploy, "~> 0.7.0"}
 ```
 
 Or from GitHub:
