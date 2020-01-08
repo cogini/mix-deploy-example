@@ -40,4 +40,4 @@ yum install -y -q wxGTK3-devel wxBase3 libxslt \
 # erlang-odbc
 
 echo "===> Installing ASDF Node.js plugin deps"
-yum install -y -q install gpg perl perl-Digest-SHA
+yum install -y -q gpg perl perl-Digest-SHA
