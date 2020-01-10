@@ -18,9 +18,17 @@ systemd unit file.
 Install Erlang, Elixir and Node.js from OS packages or use
 [ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/).
 
+Using OS packages:
 ```shell
 LANG=en_US.UTF-8 sudo bin/build-install-deps-ubuntu
 ```
+
+Using ASDF:
+```shell
+LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-ubuntu && bin/build-install-asdf-init
+```
+
+**If you are building on CentOS**, please change `ubuntu` to `centos`.
 
 ## Build
 
