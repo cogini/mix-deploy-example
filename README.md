@@ -27,9 +27,7 @@ LANG=en_US.UTF-8 sudo bin/build-install-deps-ubuntu
 LANG=en_US.UTF-8 sudo bin/build-install-deps-centos
 ```
 
-or
-
-Install using [ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/):
+or install using [ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/):
 
 ```shell
 # Ubuntu
@@ -37,14 +35,6 @@ LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-ubuntu && bin/build-install-as
 
 # CentOS
 LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-centos && bin/build-install-asdf-init
-```
-
-## Build
-
-Build the app and make a release:
-
-```shell
-bin/build
 ```
 
 ## Configure
@@ -65,17 +55,32 @@ SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4
 DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db.ondigitalocean.com:25060/defaultdb?ssl=true"
 ```
 
-## Initialize local system
+## Initialize the local system
 
-Run this once to set up the system for the app, creating users, directories,
-etc:
+Run this once to set up the system for the app, creating users, directories, etc:
 
 ```shell
 sudo bin/deploy-init-local
 ```
+This runs: 
 
-It runs `bin/deploy-copy-files` to copy `bin/environment` to `/etc/mix-deploy-example/environment`.
-`systemd` loads it on startup, setting OS environment vars, which the app then reads in `config/prod.exs`:
+```shell
+bin/deploy-create-users
+bin/deploy-create-dirs
+
+chmod +x bin/*
+cp bin/* /srv/mix-deploy-example/bin
+
+bin/deploy-copy-files
+bin/deploy-enable
+```
+
+`bin/deploy-copy-files` copies `bin/environment` to
+`/etc/mix-deploy-example/environment`.
+`systemd` loads it on startup, setting OS environment vars.
+
+Configure `config/prod.exs` to use `System.get_env/1` to read config
+from the environment:
 
 ```elixir
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
@@ -85,6 +90,14 @@ config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
 
 config :mix_deploy_example, MixDeployExample.Repo,
   url: System.get_env("DATABASE_URL")
+```
+
+## Build
+
+Build the app and make a release:
+
+```shell
+bin/build
 ```
 
 ## Deploy
@@ -117,7 +130,7 @@ sudo -i -u app /srv/mix-deploy-example/bin/deploy-remote-console
 TODO: update for mix
 
 If things aren't working right with the release, roll back to the previous
-release with the following:
+release:
 
 ```shell
 bin/deploy-rollback
@@ -247,5 +260,5 @@ Add a [Distillery custom command to run database migrations](https://www.cogini.
 ## Add Docker file
 
 ```shell
-build -f docker/Dockerfile.build .
+build -f build/docker/Dockerfile .
 ```
