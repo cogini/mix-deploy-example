@@ -6,14 +6,14 @@ This is a working example Elixir app which shows how to deploy using
 
 `mix_deploy` generates scripts which are used to deploy your app using systemd
 on a server. It includes scripts to set up the initial system, deploy
-code and handle configuration during startup.
-
-It uses [mix_systemd](https://github.com/cogini/mix_systemd) to generate a corresponding
-systemd unit file.
+code and handle configuration during startup. It uses
+[mix_systemd](https://github.com/cogini/mix_systemd) to generate a
+corresponding systemd unit file.
 
 # Deploying locally
 
-These instructions show how to deploy an app to the build server.
+These instructions show how to deploy an app to the same server you are building
+on. That can be a $5/month [Digital Ocean](https://m.do.co/c/150575a88316) server.
 
 ## Install build dependencies
 
@@ -37,7 +37,12 @@ LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-ubuntu && bin/build-install-as
 LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-centos && bin/build-install-asdf-init
 ```
 
+We normally use ASDF, but compiling from source on a small server takes a while.
+
 ## Configure
+
+Set up your production db password and `secret_key_base`, used by Phoenix to protect
+session cookies.
 
 Generate `secret_key_base`:
 
@@ -57,8 +62,8 @@ DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db
 
 ## Initialize `mix_systemd` and `mix_deploy`
 
-Copy templates from `mix_systemd` and `mix_deploy` package dirs to `rel/templates`
-and generate files based on `config/prod.exs`.
+Initialize the libraries, copying templates from `mix_systemd` and `mix_deploy` package dirs to `rel/templates`,
+then generate generate files based on the config in `config/prod.exs`:
 
 ```shell
 mix systemd.init
@@ -69,12 +74,12 @@ MIX_ENV=prod mix deploy.generate
 chmod +x bin/*
 ```
 
-The configuration is:
+This sample gets environment vars from `/etc/mix-deploy-example/environment`:
 
 ```elixir
 config :mix_systemd,
   dirs: [
-    # Create /etc/mix-deploy-example
+    # Create /etc/mix-deploy-example dir
     :configuration,
   ],
   env_files: [
@@ -83,6 +88,7 @@ config :mix_systemd,
   ]
 
 config :mix_deploy,
+  # List of scripts to generate
   templates: [
     # Systemd wrappers
     "start",
@@ -123,7 +129,7 @@ config :mix_deploy,
 
 ## Initialize the local system
 
-Set up the system for the app, creating users, directories, etc:
+Set up the local system for the app, creating users, directories, etc:
 
 ```shell
 sudo bin/deploy-init-local
@@ -141,12 +147,11 @@ bin/deploy-copy-files
 bin/deploy-enable
 ```
 
-`bin/deploy-copy-files` copies `bin/environment` to
-`/etc/mix-deploy-example/environment`.
+`bin/deploy-copy-files` copies `config/environment` to `/etc/mix-deploy-example/environment`.
 `systemd` then loads it on startup, setting OS environment vars.
 
-Configure `config/prod.exs` to use `System.get_env/1` to read config
-from the these environment vars:
+Configure `config/prod.exs` to use `System.get_env/1` to read config from
+these environment vars:
 
 ```elixir
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
@@ -163,7 +168,7 @@ config :mix_deploy_example, MixDeployExample.Repo,
 Build the app and make a release:
 
 ```shell
-bin/build
+MIX_ENV=prod bin/build
 ```
 
 ## Deploy
@@ -180,6 +185,8 @@ bin/deploy-migrate
 # Restart the systemd unit
 sudo bin/deploy-restart
 ```
+
+## Test
 
 Test it by making a request to the server:
 
