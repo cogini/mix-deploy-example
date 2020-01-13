@@ -85,19 +85,27 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_systemd,
   # release_system: :distillery,
+  # Run script before starting app to sync config from S3 bucket
   exec_start_pre: [
     ["!", :deploy_dir, "/bin/deploy-sync-config-s3"]
   ],
   dirs: [
+    # Create /etc/mix-deploy-example
     :configuration,
+    # Create /run/mix-deploy-example
     :runtime,
   ],
-  runtime_directory_preserve: "yes",
+  # Don't clear runtime dir between restarts, useful for debugging
+  # runtime_directory_preserve: "yes",
   env_files: [
+    # Load environment vars from /srv/mix-deploy-example/etc/environment
     ["-", :deploy_dir, "/etc/environment"],
+    # Load environment vars from /etc/mix-deploy-example/environment
     ["-", :configuration_dir, "/environment"],
   ],
   env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    # Mix
     ["RELEASE_TMP=", :runtime_dir],
     # Distillery
     # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
@@ -110,20 +118,15 @@ config :mix_deploy,
   # release_system: :distillery,
   # release_name: Mix.env(),
   templates: [
-    # CodeDeploy
+    # Systemd wrappers
+    "start",
     "stop",
+    "restart",
+    "enable",
+
+    # System setup
     "create-users",
     "create-dirs",
-    "clean-target",
-    "extract-release",
-    "set-perms",
-    "migrate",
-    "enable",
-    "start",
-    "restart",
-
-    # CodeBuild
-    "stage-files",
 
     # Local deploy
     # "init-local",
@@ -131,10 +134,19 @@ config :mix_deploy,
     # "release",
     # "rollback",
 
+    # CodeDeploy
+    "clean-target",
+    "extract-release",
+    "set-perms",
+
+    # CodeBuild
+    "stage-files",
+    # "sync-assets-s3",
+
     # Release commands
-    # "set-env",
-    # "remote-console",
-    # "migrate",
+    "set-env",
+    "remote-console",
+    "migrate",
 
     # Runtime environment
     "sync-config-s3",
@@ -142,24 +154,19 @@ config :mix_deploy,
     # "runtime-environment-wrap",
     # "set-cookie-ssm",
   ],
+  # This should match mix_systemd
   env_files: [
     ["-", :deploy_dir, "/etc/environment"],
     ["-", :configuration_dir, "/environment"],
   ],
+  # This should match mix_systemd
   env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    # Mix
     ["RELEASE_TMP=", :runtime_dir],
     # Distillery
     # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
     # "REPLACE_OS_VARS=true",
-  ],
-  copy_files: [
-    %{
-      src: "rel/etc/environment",
-      dst: [:deploy_dir, "/etc"],
-      user: "$DEPLOY_USER",
-      group: "$APP_GROUP",
-      mode: "640"
-    },
   ],
   app_user: "app",
   app_group: "app"
