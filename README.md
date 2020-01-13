@@ -69,6 +69,58 @@ MIX_ENV=prod mix deploy.generate
 chmod +x bin/*
 ```
 
+The configuration is:
+
+```elixir
+config :mix_systemd,
+  dirs: [
+    # Create /etc/mix-deploy-example
+    :configuration,
+  ],
+  env_files: [
+    # Load environment vars from /etc/mix-deploy-example/environment
+    ["-", :configuration_dir, "/environment"],
+  ]
+
+config :mix_deploy,
+  templates: [
+    # Systemd wrappers
+    "start",
+    "stop",
+    "restart",
+    "enable",
+
+    # System setup
+    "create-users",
+    "create-dirs",
+
+    # Local deploy
+    "init-local",
+    "copy-files",
+    "release",
+    "rollback",
+
+    # Release commands
+    "set-env",
+    "remote-console",
+    "migrate",
+  ],
+  # This should match mix_systemd
+  env_files: [
+    ["-", :configuration_dir, "/environment"],
+  ],
+  # Have deploy-copy-files copy config/environment to /etc/mix-deploy-example
+  copy_files: [
+    %{
+      src: "config/environment",
+      dst: :configuration_dir,
+      user: "$DEPLOY_USER",
+      group: "$APP_GROUP",
+      mode: "640"
+    },
+  ]
+```
+
 ## Initialize the local system
 
 Set up the system for the app, creating users, directories, etc:
@@ -133,13 +185,6 @@ Test it by making a request to the server:
 
 ```shell
 curl -v http://localhost:4000/
-```
-
-To open a console on the running release:
-
-```shell
-# TODO: update for mix
-sudo -i -u app /srv/mix-deploy-example/bin/deploy-remote-console
 ```
 
 If things aren't working right, you can roll back to the previous release:
@@ -209,11 +254,11 @@ These scripts install the required dependencies:
 - `build-install-deps-centos`
 - `build-install-deps-ubuntu`
 
-This script builds your application:
+This script builds the app:
 
 - `build`
 
-This script verifies that your application is running correctly:
+This script verifies that the app is running correctly:
 
 - `bin/validate-service`
 
@@ -235,103 +280,7 @@ config :phoenix, :serve_endpoints, true
 
 ## Configure mix_deploy and mix_systemd
 
-Configure `mix_deploy` and `mix_systemd` in `config/prod.exs`:
-
-```elixir
-config :mix_systemd,
-  # release_system: :distillery,
-  dirs: [
-    # Create /etc/mix-deploy-example
-    :configuration,
-    # Create /run/mix-deploy-example
-    # :runtime,
-  ],
-  # Don't clear runtime dir between restarts, useful for debugging
-  # runtime_directory_preserve: "yes",
-  env_files: [
-    # Load environment vars from /srv/mix-deploy-example/etc/environment
-    ["-", :deploy_dir, "/etc/environment"],
-    # Load environment vars from /etc/mix-deploy-example/environment
-    ["-", :configuration_dir, "/environment"],
-  ],
-  # env_vars: [
-  #   # Tell release scripts to use runtime directory for temp files
-  #   # Mix
-  #   ["RELEASE_TMP=", :runtime_dir],
-  #   # Distillery
-  #   # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
-  #   # "REPLACE_OS_VARS=true",
-  # ],
-  app_user: "app",
-  app_group: "app"
-
-config :mix_deploy,
-  # release_system: :distillery,
-  # release_name: Mix.env(),
-  templates: [
-    # Systemd wrappers
-    "start",
-    "stop",
-    "restart",
-    "enable",
-
-    # System setup
-    "create-users",
-    "create-dirs",
-
-    # Local deploy
-    "init-local",
-    "copy-files",
-    "release",
-    "rollback",
-
-    # CodeDeploy
-    # "clean-target",
-    # "extract-release",
-    # "set-perms",
-
-    # CodeBuild
-    # "stage-files",
-    # "sync-assets-s3",
-
-    # Release commands
-    "set-env",
-    "remote-console",
-    "migrate",
-
-    # Runtime environment
-    # "sync-config-s3",
-    # "runtime-environment-file",
-    # "runtime-environment-wrap",
-    # "set-cookie-ssm",
-  ],
-  # This should match mix_systemd
-  env_files: [
-    ["-", :deploy_dir, "/etc/environment"],
-    ["-", :configuration_dir, "/environment"],
-  ],
-  # This should match mix_systemd
-  # env_vars: [
-  #   # Tell release scripts to use runtime directory for temp files
-  #   # Mix
-  #   ["RELEASE_TMP=", :runtime_dir],
-  #   # Distillery
-  #   # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
-  #   # "REPLACE_OS_VARS=true",
-  # ],
-  # Have deploy-copy-files copy config/environment to /etc/mix-deploy-example
-  copy_files: [
-    %{
-      src: "config/environment",
-      dst: :configuration_dir,
-      user: "$DEPLOY_USER",
-      group: "$APP_GROUP",
-      mode: "640"
-    },
-  ],
-  app_user: "app",
-  app_group: "app"
-```
+Configure `mix_deploy` and `mix_systemd` in `config/prod.exs`.
 
 ## Configure ASDF
 
@@ -353,8 +302,6 @@ nodejs 10.15.3
 - Add `buildspec.yml`
 
 ## Add database migrations
-
-Add a [Distillery custom command to run database migrations](https://www.cogini.com/blog/running-ecto-migrations-in-production-releases-with-distillery-custom-commands/)
 
 - Add `lib/mix_deploy_example/tasks/migrate.ex`
 
