@@ -17,10 +17,7 @@ These instructions show how to deploy an app to the build server.
 
 ## Install build dependencies
 
-Install Erlang, Elixir and Node.js from OS packages or use
-[ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/).
-
-Install using OS packages:
+Install Erlang, Elixir and Node.js from OS packages:
 
 ```shell
 # Ubuntu
@@ -32,7 +29,7 @@ LANG=en_US.UTF-8 sudo bin/build-install-deps-centos
 
 or
 
-Install using ASDF:
+Install using [ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/):
 
 ```shell
 # Ubuntu
