@@ -55,6 +55,17 @@ SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4
 DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db.ondigitalocean.com:25060/defaultdb?ssl=true"
 ```
 
+## Initialize `mix_systemd` and `mix_deploy`
+
+```shell
+mix systemd.init
+mix systemd.generate
+
+mix deploy.init
+mix deploy.generate
+chmod +x bin/*
+```
+
 ## Initialize the local system
 
 Run this once to set up the system for the app, creating users, directories, etc:
@@ -62,13 +73,13 @@ Run this once to set up the system for the app, creating users, directories, etc
 ```shell
 sudo bin/deploy-init-local
 ```
-This runs: 
+
+This runs:
 
 ```shell
 bin/deploy-create-users
 bin/deploy-create-dirs
 
-chmod +x bin/*
 cp bin/* /srv/mix-deploy-example/bin
 
 bin/deploy-copy-files
@@ -227,6 +238,102 @@ config :phoenix, :serve_endpoints, true
 ## Configure mix_deploy and mix_systemd
 
 Configure `mix_deploy` and `mix_systemd` in `config/prod.exs`:
+
+```elixir
+config :mix_systemd,
+  # release_system: :distillery,
+  dirs: [
+    # Create /etc/mix-deploy-example
+    :configuration,
+    # Create /run/mix-deploy-example
+    # :runtime,
+  ],
+  # Don't clear runtime dir between restarts, useful for debugging
+  # runtime_directory_preserve: "yes",
+  env_files: [
+    # Load environment vars from /srv/mix-deploy-example/etc/environment
+    ["-", :deploy_dir, "/etc/environment"],
+    # Load environment vars from /etc/mix-deploy-example/environment
+    ["-", :configuration_dir, "/environment"],
+  ],
+  # env_vars: [
+  #   # Tell release scripts to use runtime directory for temp files
+  #   # Mix
+  #   ["RELEASE_TMP=", :runtime_dir],
+  #   # Distillery
+  #   # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+  #   # "REPLACE_OS_VARS=true",
+  # ],
+  app_user: "app",
+  app_group: "app"
+
+config :mix_deploy,
+  # release_system: :distillery,
+  # release_name: Mix.env(),
+  templates: [
+    # Systemd wrappers
+    "start",
+    "stop",
+    "restart",
+    "enable",
+
+    # System setup
+    "create-users",
+    "create-dirs",
+
+    # Local deploy
+    "init-local",
+    "copy-files",
+    "release",
+    "rollback",
+
+    # CodeDeploy
+    # "clean-target",
+    # "extract-release",
+    # "set-perms",
+
+    # CodeBuild
+    # "stage-files",
+    # "sync-assets-s3",
+
+    # Release commands
+    "set-env",
+    "remote-console",
+    "migrate",
+
+    # Runtime environment
+    # "sync-config-s3",
+    # "runtime-environment-file",
+    # "runtime-environment-wrap",
+    # "set-cookie-ssm",
+  ],
+  # This should match mix_systemd
+  env_files: [
+    ["-", :deploy_dir, "/etc/environment"],
+    ["-", :configuration_dir, "/environment"],
+  ],
+  # This should match mix_systemd
+  # env_vars: [
+  #   # Tell release scripts to use runtime directory for temp files
+  #   # Mix
+  #   ["RELEASE_TMP=", :runtime_dir],
+  #   # Distillery
+  #   # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+  #   # "REPLACE_OS_VARS=true",
+  # ],
+  # Have deploy-copy-files copy config/environment to /etc/mix-deploy-example
+  copy_files: [
+    %{
+      src: "config/environment",
+      dst: :configuration_dir,
+      user: "$DEPLOY_USER",
+      group: "$APP_GROUP",
+      mode: "640"
+    },
+  ],
+  app_user: "app",
+  app_group: "app"
+```
 
 ## Configure ASDF
 
