@@ -52,24 +52,21 @@ bin/build
 
 ## Configure
 
-Create a file `config/environment` with contents like:
-
-```shell
-DATABASE_URL="ecto://foo_prod:Sekrit!@db.foo.local/foo_prod"
-SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4y"
-HOST="www.example.com"
-ASSETS_HOST="assets.example.com"
-```
-
-
-Generate `secret_key_base` like this:
+Generate `secret_key_base`:
 
 ```shell
 mix phx.gen.secret 64
 ```
 
-The `bin/deploy-copy-files` script will copy it to `/etc/mix-deploy-example/environment`,
-and `systemd` will load it on startup and set OS environment vars for the app.
+Create a database using
+[Digital Ocean's Managed Databases Service](https://www.cogini.com/blog/multiple-databases-with-digital-ocean-managed-databases-service/).
+
+Create the file `config/environment` with app secrets:
+
+```shell
+SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4y"
+DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db.ondigitalocean.com:25060/defaultdb?ssl=true"
+```
 
 ## Initialize local system
 
@@ -80,8 +77,18 @@ etc:
 sudo bin/deploy-init-local
 ```
 
-It runs `bin/deploy-copy-files`. If you change the `config/environment` file, run
-it again.
+It runs `bin/deploy-copy-files` to copy `bin/environment` to `/etc/mix-deploy-example/environment`.
+`systemd` loads it on startup, setting OS environment vars, which the app then reads in `config/prod.exs`:
+
+```elixir
+config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
+  http: [:inet6, port: System.get_env("PORT") || 4000],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  cache_static_manifest: "priv/static/cache_manifest.json"
+
+config :mix_deploy_example, MixDeployExample.Repo,
+  url: System.get_env("DATABASE_URL")
+```
 
 ## Deploy
 
@@ -109,6 +116,8 @@ To open a console on the running release:
 ```shell
 sudo -i -u app /srv/mix-deploy-example/bin/deploy-remote-console
 ```
+
+TODO: update for mix
 
 If things aren't working right with the release, roll back to the previous
 release with the following:
@@ -156,18 +165,6 @@ Configure `rel/env.sh.eex` and `rel/vm.args.eex` if necessary, e.g.
 [increasing network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app/).
 
 See [the docs](https://hexdocs.pm/mix/Mix.Tasks.Release.html) for more details.
-
-## Configure release
-
-Add runtime config provider to `rel/config.exs`:
-
-```elixir
-environment :prod do
-  set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/mix-deploy-example/config.exs"]}
-  ]
-end
-```
 
 ## Install mix_deploy and mix_systemd
 
