@@ -11,24 +11,36 @@ code and handle configuration during startup.
 It uses [mix_systemd](https://github.com/cogini/mix_systemd) to generate a corresponding
 systemd unit file.
 
-# Running
+# Deploying locally
+
+These instructions show how to deploy an app to the build server.
 
 ## Install build dependencies
 
 Install Erlang, Elixir and Node.js from OS packages or use
 [ASDF](https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/).
 
-Using OS packages:
+Install using OS packages:
+
 ```shell
+# Ubuntu
 LANG=en_US.UTF-8 sudo bin/build-install-deps-ubuntu
+
+# CentOS
+LANG=en_US.UTF-8 sudo bin/build-install-deps-centos
 ```
 
-Using ASDF:
+or
+
+Install using ASDF:
+
 ```shell
+# Ubuntu
 LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-ubuntu && bin/build-install-asdf-init
-```
 
-**If you are building on CentOS**, please change `ubuntu` to `centos`.
+# CentOS
+LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-centos && bin/build-install-asdf-init
+```
 
 ## Build
 
@@ -37,6 +49,27 @@ Build the app and make a release:
 ```shell
 bin/build
 ```
+
+## Configure
+
+Create a file `config/environment` with contents like:
+
+```shell
+DATABASE_URL="ecto://foo_prod:Sekrit!@db.foo.local/foo_prod"
+SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4y"
+HOST="www.example.com"
+ASSETS_HOST="assets.example.com"
+```
+
+
+Generate `secret_key_base` like this:
+
+```shell
+mix phx.gen.secret 64
+```
+
+The `bin/deploy-copy-files` script will copy it to `/etc/mix-deploy-example/environment`,
+and `systemd` will load it on startup and set OS environment vars for the app.
 
 ## Initialize local system
 
@@ -47,33 +80,8 @@ etc:
 sudo bin/deploy-init-local
 ```
 
-## Configure
-
-We keep secrets like database passwords and environment-specific configuration
-like database host separate from the release, stored in a file in the OS
-standard config directory for apps, under `/etc`.
-
-Copy the sample production config:
-
-```shell
-cp config/prod.secret.exs.sample config/prod.secret.exs
-```
-
-Edit `config/prod.secret.exs`, configuring production database settings and `secret_key_base`.
-
-Generate `secret_key_base` like this:
-
-```shell
-mix phx.gen.secret 64
-```
-
-Copy the runtime config to `/etc`.
-
-```shell
-cp config/prod.secret.exs /etc/mix-deploy-example/config.exs
-chown deploy:app /etc/mix-deploy-example/config.exs
-chmod 644 /etc/mix-deploy-example/config.exs
-```
+It runs `bin/deploy-copy-files`. If you change the `config/environment` file, run
+it again.
 
 ## Deploy
 
@@ -144,29 +152,12 @@ defp releases do
 end
 ```
 
-Configure `rel/env.sh.eex` and `rel/vm.args.eex` if necessary.
+Configure `rel/env.sh.eex` and `rel/vm.args.eex` if necessary, e.g.
+[increasing network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app/).
 
 See [the docs](https://hexdocs.pm/mix/Mix.Tasks.Release.html) for more details.
 
-## Install and configure Distillery (optional)
-
-Add library to deps:
-
-```elixir
-{:distillery, "~> 2.1"}
-```
-
-Generate initial distillery config files in the `rel` dir:
-
-```shell
-mix distillery.init
-```
-
-Add `rel` dir to git.
-
 ## Configure release
-
-[Increase network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app/) in `rel/vm.args`.
 
 Add runtime config provider to `rel/config.exs`:
 
@@ -178,8 +169,6 @@ environment :prod do
 end
 ```
 
-Add `config/prod.secret.exs.sample` file.
-
 ## Install mix_deploy and mix_systemd
 
 Add libraries to deps from Hex:
@@ -188,23 +177,14 @@ Add libraries to deps from Hex:
 {:mix_deploy, "~> 0.7.0"}
 ```
 
-Or from GitHub:
-
-```elixir
-{:mix_systemd, github: "cogini/mix_systemd", override: true},
-{:mix_deploy, github: "cogini/mix_deploy"},
-end
-```
-
 Add `rel/templates` and `bin/deploy-*` to `.gitignore`.
 
 ## Copy build and utility scripts
 
 Copy these scripts from the `bin/` directory to the `bin/` directory of your project.
 
-These scripts build your release or install the required dependencies:
+These scripts install the required dependencies:
 
-- `build`
 - `build-install-asdf`
 - `build-install-asdf-deps-centos`
 - `build-install-asdf-deps-ubuntu`
@@ -212,6 +192,10 @@ These scripts build your release or install the required dependencies:
 - `build-install-asdf-macos`
 - `build-install-deps-centos`
 - `build-install-deps-ubuntu`
+
+This script builds your application:
+
+- `build`
 
 This script verifies that your application is running correctly:
 
@@ -235,22 +219,7 @@ config :phoenix, :serve_endpoints, true
 
 ## Configure mix_deploy and mix_systemd
 
-Configure `mix_deploy` and `mix_systemd`. If you are deploying on the local
-system, then it will work without any configuration.
-
-By default, it runs the app under an OS user matching the application, e.g.
-`mix-deploy-example`, which is a bit long, so change `config/prod.exs` to use
-`app` as the name of the OS user:
-
-```elixir
-config :mix_deploy,
-  app_user: "app",
-  app_group: "app"
-
-config :mix_systemd,
-  app_user: "app",
-  app_group: "app"
-```
+Configure `mix_deploy` and `mix_systemd` in `config/prod.exs`:
 
 ## Configure ASDF
 
@@ -258,9 +227,9 @@ Create a `.tool-versions` file in the root of your project, describing the versi
 of OTP, Elixir, and Node that you will be building with:
 
 ```
-erlang 21.3
-elixir 1.8.2
-nodejs 10.16.0
+erlang 22.2
+elixir 1.9.4
+nodejs 10.15.3
 ```
 
 ## Configure for CodeDeploy
@@ -276,17 +245,6 @@ nodejs 10.16.0
 Add a [Distillery custom command to run database migrations](https://www.cogini.com/blog/running-ecto-migrations-in-production-releases-with-distillery-custom-commands/)
 
 - Add `lib/mix_deploy_example/tasks/migrate.ex`
-- Add `rel/commands/migrate.sh`.
-
-In `rel/config.exs`:
-
-```elixir
-environment :prod do
-  set commands: [
-    migrate: "rel/commands/migrate.sh"
-  ]
-end
-```
 
 - Add TOML lib to `mix.exs`
 
