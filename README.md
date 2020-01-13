@@ -57,18 +57,21 @@ DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db
 
 ## Initialize `mix_systemd` and `mix_deploy`
 
+Copy templates from `mix_systemd` and `mix_deploy` package dirs to `rel/templates`
+and generate files based on `config/prod.exs`.
+
 ```shell
 mix systemd.init
-mix systemd.generate
+MIX_ENV=prod mix systemd.generate
 
 mix deploy.init
-mix deploy.generate
+MIX_ENV=prod mix deploy.generate
 chmod +x bin/*
 ```
 
 ## Initialize the local system
 
-Run this once to set up the system for the app, creating users, directories, etc:
+Set up the system for the app, creating users, directories, etc:
 
 ```shell
 sudo bin/deploy-init-local
@@ -88,10 +91,10 @@ bin/deploy-enable
 
 `bin/deploy-copy-files` copies `bin/environment` to
 `/etc/mix-deploy-example/environment`.
-`systemd` loads it on startup, setting OS environment vars.
+`systemd` then loads it on startup, setting OS environment vars.
 
 Configure `config/prod.exs` to use `System.get_env/1` to read config
-from the environment:
+from the these environment vars:
 
 ```elixir
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
@@ -126,7 +129,7 @@ bin/deploy-migrate
 sudo bin/deploy-restart
 ```
 
-Make a request to the server:
+Test it by making a request to the server:
 
 ```shell
 curl -v http://localhost:4000/
@@ -135,13 +138,11 @@ curl -v http://localhost:4000/
 To open a console on the running release:
 
 ```shell
+# TODO: update for mix
 sudo -i -u app /srv/mix-deploy-example/bin/deploy-remote-console
 ```
 
-TODO: update for mix
-
-If things aren't working right with the release, roll back to the previous
-release:
+If things aren't working right, you can roll back to the previous release:
 
 ```shell
 bin/deploy-rollback
@@ -173,9 +174,6 @@ defp releases do
   [
     mix_deploy_example: [
       include_executables_for: [:unix],
-      # config_providers: [
-      #   {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
-      # ],
       steps: [:assemble, :tar]
     ],
   ]
@@ -223,7 +221,7 @@ This script verifies that your application is running correctly:
 
 Update `config/prod.exs` to run from release:
 
-- Start Phoenix endpoints
+- Start Phoenix endpoints automatically
 
 ```elixir
 config :phoenix, :serve_endpoints, true
