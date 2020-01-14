@@ -1,3 +1,5 @@
 # {{ ansible_managed }}
-{{ elixir_release_deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start {{ elixir_release_service_name }}, /bin/systemctl stop {{ elixir_release_service_name }}, /bin/systemctl restart {{ elixir_release_service_name }}, /bin/systemctl status {{ elixir_release_service_name }}
-Defaults:{{ elixir_release_deploy_user }} !requiretty
+{% for user in elixir_release_restart_users %}
+{{ user }} ALL=(ALL) NOPASSWD: /bin/systemctl start {{ elixir_release_service_name }}, /bin/systemctl stop {{ elixir_release_service_name }}, /bin/systemctl restart {{ elixir_release_service_name }}, /bin/systemctl status {{ elixir_release_service_name }}
+Defaults:{{ user }} !requiretty
+{% endfor %}

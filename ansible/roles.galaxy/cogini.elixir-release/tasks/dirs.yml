@@ -11,10 +11,6 @@
     - "{{ elixir_release_releases_dir }}"
     - "{{ elixir_release_scripts_dir }}"
 
-- name: Create configuration dir
-  file: path={{ elixir_release_configuration_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0750
-  when: elixir_release_configuration_dir is defined
-
 - name: Create flags dir for systemd
   file: path={{ elixir_release_shutdown_flags_dir }} state=directory owner={{ elixir_release_deploy_user }} group={{ elixir_release_app_group }} mode=0700
   when: "elixir_release_restart_method  == 'systemd_flag'"
@@ -31,7 +27,7 @@
     owner: "{{ elixir_release_app_user }}"
     group: "{{ elixir_release_app_group }}"
     mode:  "{{ elixir_release_cache_directory_mode }}"
-    when: "'cache' in elixir_release_app_dirs"
+  when: "'cache' in elixir_release_app_dirs"
 
 - name: Create configuration dir
   file:
@@ -40,7 +36,7 @@
     owner: "{{ elixir_release_app_user }}"
     group: "{{ elixir_release_app_group }}"
     mode:  "{{ elixir_release_configuration_directory_mode }}"
-    when: "'configuration' in elixir_release_app_dirs"
+  when: "'configuration' in elixir_release_app_dirs"
 
 - name: Create logs dir
   file:
@@ -49,7 +45,7 @@
     owner: "{{ elixir_release_app_user }}"
     group: "{{ elixir_release_app_group }}"
     mode:  "{{ elixir_release_logs_directory_mode }}"
-    when: "'logs in elixir_release_app_dirs"
+  when: "'logs' in elixir_release_app_dirs"
 
 - name: Create runtime dir
   file:
@@ -58,7 +54,7 @@
     owner: "{{ elixir_release_app_user }}"
     group: "{{ elixir_release_app_group }}"
     mode:  "{{ elixir_release_runtime_directory_mode }}"
-    when: "'runtime' in elixir_release_app_dirs"
+  when: "'runtime' in elixir_release_app_dirs"
 
 - name: Create state dir
   file:
@@ -67,13 +63,13 @@
     owner: "{{ elixir_release_app_user }}"
     group: "{{ elixir_release_app_group }}"
     mode:  "{{ elixir_release_state_directory_mode }}"
-    when: "'state' in elixir_release_app_dirs"
+  when: "'state' in elixir_release_app_dirs"
 
 - name: Create tmp dir
   file:
     path: "{{ elixir_release_tmp_dir }}"
-    tmp: directory
+    state: directory
     owner: "{{ elixir_release_app_user }}"
     group: "{{ elixir_release_app_group }}"
     mode:  "{{ elixir_release_tmp_directory_mode }}"
-    when: "'tmp' in elixir_release_app_dirs"
+  when: "'tmp' in elixir_release_app_dirs"

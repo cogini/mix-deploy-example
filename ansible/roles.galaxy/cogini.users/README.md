@@ -68,7 +68,7 @@ and setting file permissions.
 
 By default, this role does nothing. You need to add configuration vars to have
 it do something. That would normally be via group vars, e.g.
-`inventory/group_vars/app-servers`, a `vars` section in a playbook, or a combination.
+`inventory/group_vars/app_servers`, a `vars` section in a playbook, or a combination.
 
 You can have different settings on a host or group level to e.g. give
 developers login access in the dev environment but not on prod.

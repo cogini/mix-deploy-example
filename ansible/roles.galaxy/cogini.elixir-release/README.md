@@ -39,11 +39,66 @@ Systemd notices and restarts it with the new code.
 
 See [mix-deploy-example](https://github.com/cogini/mix-deploy-example) for a full example.
 
-# Requirements
+# Example Playbook
 
-None
+A minimal playbook, for an app called `foo`:
+
+    - hosts: '*'
+      become: true
+      vars:
+        elixir_release_app_name: foo
+      roles:
+        - cogini.elixir-release
+
+Put this in `ansible/playbooks/deploy-app.yml`.
+
+First, set up the target machine, e.g. installing packages and creating directories.
+Run this from your dev machine, specifying a user with sudo permissions:
+
+    ansible-playbook -u $USER -v -l web-servers playbooks/deploy-app.yml --skip-tags deploy -D
+
+Next, deploy the code. Run this from the build server, from a user account with
+ssh access to the deploy account on the target machine:
+
+    ansible-playbook -u deploy -v -l web-servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
+
+A more heaviliy customized playbook:
+
+    - hosts: '*'
+      become: true
+      vars:
+        elixir_release_app_name: foo
+        elixir_release_app_user: bar
+        elixir_release_deploy_user: deploy
+        elixir_release_mix_env: public
+        elixir_release_base_dir: /opt/bar
+        elixir_release_app_dirs:
+          - configuration
+          - runtime
+          - logs
+          - tmp
+          - state
+          - cache
+        elixir_release_tmp_directory_base: /var/tmp/bar
+        elixir_release_state_directory_base: /var/bar
+        elixir_release_http_listen_port: 8080
+        elixir_release_cache_directory_mode: 0700
+        elixir_release_configuration_directory_mode: 0755
+        elixir_release_logs_directory_mode: 0755
+        elixir_release_state_directory_mode: 0755
+        elixir_release_tmp_directory_mode: 0755
+        elixir_release_sudoers_file: "{{ elixir_release_app_user }}-{{ elixir_release_service_name }}"
+        # Location of source app, assuming that the deploy scripts are in a separate repo in a parallel dir
+        elixir_release_src_dir: "{{ playbook_dir }}/../../../foo"
+      roles:
+        - cogini.elixir-release
 
 # Role Variables
+
+Location of app to get release files. By default, it assumes that you have an `ansible` directory
+in your app source
+
+    elixir_release_app_dir: "{{ role_path }}/../../.."
 
 Erlang name of the application, used to by Distillery to name directories
 and scripts.
@@ -91,7 +146,6 @@ OS group that the app runs under:
 App release environment, i.e. the setting of `MIX_ENV`, used to find the release file under the `_build` dir:
 
     elixir_release_mix_env: prod
-
 
 Directory prefix for release files:
 
@@ -147,6 +201,12 @@ Options are:
 * `touch`, which touches the file `{{ elixir_release_shutdown_flags_dir }}/restart.flag`.
   Directory permissions are 0770, allowing the managed process to restart itself.
 
+Which users are allowed to restart the app using `sudo /bin/systemctl restart` when method == `systemctl`.
+
+  elixir_release_restart_users:
+   - "{{ elixir_release_deploy_user }}"
+
+Set to `[]` and nobody can restart, or add additional names, e.g. `- "{{ elixir_release_app_user }}"`.
 
 ## systemd and scripts
 
@@ -170,7 +230,6 @@ this role will generate a systemd unit file from a template.
 With the default value of `bin`, the role copies scripts from the project's `bin` directory
 to `/srv/foo/bin` on the target system. Set it to `mix_deploy` if you have set
 `output_dir_per_env: true` in the `mix_deploy` config, storing the generated scripts under `_build`.
-
 
 The following variables are used when generating the systemd unit file:
 
@@ -226,22 +285,9 @@ List of environment vars to set in systemd unit file:
 
 None
 
-# Example Playbook
+# Requirements
 
-    - hosts: '*'
-      become: true
-      roles:
-        - cogini.elixir-release
-
-Run setup tasks, e.g. installing packages and creating directories.
-Run this from your dev machine, specifying a user with sudo permissions.
-
-    ansible-playbook -u $USER -v -l web-servers playbooks/deploy-app.yml --skip-tags deploy -D
-
-Deploy the code. Run this from the build server, from a user account with ssh
-access to the deploy account on the target machine.
-
-    ansible-playbook -u deploy -v -l web-servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
+None
 
 # License
 

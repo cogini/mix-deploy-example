@@ -6,16 +6,23 @@
     - "../vars/empty.yml"
   tags: [always]
 
-- import_tasks: install.yml
+- import_tasks: install_apt.yml
   when: ansible_pkg_mgr == "apt"
   tags: [postgresql, postgresql-install]
 
 - import_tasks: install_yum.yml
-  when: ansible_pkg_mgr == "yum"
+  when: ansible_pkg_mgr == "yum" and ( ansible_distribution == "RedHat" or ansible_distribution == "CentOS" )
+  tags: [postgresql, postgresql-install]
+
+- import_tasks: install_dnf.yml
+  when: ansible_pkg_mgr == "dnf" and ansible_distribution == "Fedora"
   tags: [postgresql, postgresql-install]
 
 - import_tasks: extensions.yml
   tags: [postgresql, postgresql-extensions]
+
+- import_tasks: fdw.yml
+  tags: [postgresql, postgresql-fdw]
 
 - import_tasks: configure.yml
   tags: [postgresql, postgresql-configure]
@@ -26,9 +33,15 @@
 - import_tasks: databases.yml
   tags: [postgresql, postgresql-databases]
 
+- import_tasks: schemas.yml
+  tags: [postgresql, postgresql-schemas]
+
 - import_tasks: users_privileges.yml
   tags: [postgresql, postgresql-users]
 
 - import_tasks: monit.yml
   when: monit_protection is defined and monit_protection == true
   tags: [postgresql, postgresql-monit]
+
+- import_tasks: check_pg_version_mismatch.yml
+  tags: [postgresql, postgresql-version-mismatch]

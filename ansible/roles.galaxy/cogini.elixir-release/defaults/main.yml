@@ -10,6 +10,10 @@ elixir_release_service_name: "{{ elixir_release_app_name | replace('_', '-') }}"
 # Elixir application name
 elixir_release_app_module: "{{ elixir_release_service_name.title().replace('_', '') }}"
 
+# Location of app source
+# Assumes ansible dir in app source repo
+elixir_release_src_dir: "{{ role_path }}/../../.."
+
 # Version of the app in the release
 # If not specified, will read from file
 # elixir_release_version: "0.1.0"
@@ -95,6 +99,12 @@ elixir_release_conform_conf_path: "{{ elixir_release_configuration_dir }}/config
 elixir_release_restart_method: systemctl
 # elixir_release_restart_method: systemd_flag
 # elixir_release_restart_method: touch
+
+elixir_release_restart_users:
+  - "{{ elixir_release_deploy_user }}"
+
+# Name of sudoers config file
+elixir_release_sudoers_file: "{{ elixir_release_deploy_user }}-{{ elixir_release_service_name }}"
 
 # Defaults
 # Open file limits

@@ -3,7 +3,7 @@
 - name: Create sudoers config for deploy user
   template:
     src: etc/sudoers.d/app.j2
-    dest: /etc/sudoers.d/{{ elixir_release_deploy_user }}-{{ elixir_release_service_name }}
+    dest: /etc/sudoers.d/{{ elixir_release_sudoers_file }}
     owner: root
     group: root
     mode: 0600
@@ -65,7 +65,7 @@
   - name: Set vars
     set_fact:
       # Location on local filesystem of release files
-      elixir_release_build_dir: "{{ role_path }}/../../../_build/{{ elixir_release_mix_env }}"
+      elixir_release_build_dir: "{{ elixir_release_src_dir }}/_build/{{ elixir_release_mix_env }}"
 
   - name: Copy systemd unit files from release
     copy:
@@ -75,13 +75,13 @@
       group: "root"
       mode: 0600
     with_fileglob:
-      - "{{ elixir_release_build_dir }}systemd/var/lib/systemd/*"
+      - "{{ elixir_release_build_dir }}/systemd/lib/systemd/*"
 
   - name: Enable systemd unit files from release
     service:
       name: "{{ item | basename }}"
       enabled: yes
     with_fileglob:
-      - "{{ elixir_release_build_dir }}systemd/var/lib/systemd/*"
+      - "{{ elixir_release_build_dir }}/systemd/lib/systemd/*"
 
   when: elixir_release_systemd_source == 'mix_systemd'

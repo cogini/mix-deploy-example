@@ -26,16 +26,18 @@ ansible-galaxy install ANXS.postgresql
 
 #### Compatibility matrix
 
-| Distribution / PostgreSQL | <= 9.2 | 9.3 | 9.4 | 9.5 | 9.6 | 10 | 11 |
-| ------------------------- |:------:|:---:|:---:|:---:|:---:|:--:|:--:|
-| Ubuntu 14.04 | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :grey_question:|
-| Ubuntu 16.04 | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :grey_question:|
-| Debian 8.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :grey_question:|
-| Debian 9.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :grey_question:|
-| CentOS 6.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :grey_question:|
-| CentOS 7.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :grey_question:|
+| Distribution / PostgreSQL | <= 9.3 | 9.4 | 9.5 | 9.6 | 10 | 11 |
+| ------------------------- |:---:|:---:|:---:|:---:|:--:|:--:|
+| Ubuntu 14.04 | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
+| Ubuntu 16.04 | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
+| Debian 8.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
+| Debian 9.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
+| CentOS 6.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
+| CentOS 7.x | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
+| Fedora latest | :no_entry: | :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:| :white_check_mark:|
 
 - :white_check_mark: - tested, works fine
+- :warning: - Not for production use
 - :grey_question: - will work in the future (help out if you can)
 - :interrobang: - maybe works, not tested
 - :no_entry: - PostgreSQL has reached EOL
@@ -45,7 +47,7 @@ ansible-galaxy install ANXS.postgresql
 
 ```yaml
 # Basic settings
-postgresql_version: 9.6
+postgresql_version: 11
 postgresql_encoding: "UTF-8"
 postgresql_locale: "en_US.UTF-8"
 postgresql_ctype: "en_US.UTF-8"
@@ -81,7 +83,18 @@ postgresql_database_extensions:
 postgresql_users:
   - name: baz
     pass: pass
-    encrypted: no       # denotes if the password is already encrypted.
+    encrypted: yes  # if password should be encrypted, postgresql >= 10 does only accepts encrypted passwords
+
+# List of schemas to be created (optional)
+postgresql_database_schemas:
+  - database: foobar           # database name
+    schema: acme               # schema name
+    state: present
+
+  - database: foobar           # database name
+    schema: acme_baz           # schema name
+    owner: baz                 # owner name
+    state: present
 
 # List of user privileges to be applied (optional)
 postgresql_user_privileges:
@@ -121,11 +134,11 @@ Maintainers:
 - [Jonathan Lozada D.](https://github.com/jlozadad)
 - [Jonathan Freedman](https://github.com/otakup0pe)
 - [Sergei Antipov](https://github.com/UnderGreen)
+- [Greg Clough](https://github.com/gclough)
 
 Top Contributors:
 - [David Farrington](https://github.com/farridav)
 - [Jesse Lang](https://github.com/jesselang)
-- [Greg Clough](https://github.com/gclough)
 - [Michael Conrad](https://github.com/MichaelConrad)
 - [Sébastien Alix](https://github.com/sebalix)
 - [Copperfield](https://github.com/Copperfield)
