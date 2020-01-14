@@ -66,6 +66,12 @@ Initialize the libraries, copying templates from `mix_systemd` and `mix_deploy` 
 then generate files based on the config in `config/prod.exs`:
 
 ```shell
+MIX_ENV=prod bin/build
+```
+
+That does the following:
+
+```
 mix systemd.init
 MIX_ENV=prod mix systemd.generate
 
@@ -150,7 +156,7 @@ bin/deploy-enable
 `bin/deploy-copy-files` copies `config/environment` to `/etc/mix-deploy-example/environment`.
 `systemd` then loads it on startup, setting OS environment vars.
 
-Configure `config/prod.exs` to use `System.get_env/2` to read config from
+Configure `config/releases.exs` to use `System.get_env/2` to read config from
 the environment vars:
 
 ```elixir
@@ -162,6 +168,8 @@ config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
 config :mix_deploy_example, MixDeployExample.Repo,
   url: System.get_env("DATABASE_URL")
 ```
+
+# Log out and log in again
 
 ## Build
 
