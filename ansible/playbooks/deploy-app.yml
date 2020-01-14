@@ -1,14 +1,15 @@
+---
 # Install Elixir app
 #
 # Run setup tasks, installing packages and creating directories, etc.
 # Run this from your dev machine, specifying a user with sudo permissions.
 #
-#   ansible-playbook -u $USER -v -l web-servers playbooks/deploy-app.yml --skip-tags deploy -D
+#   ansible-playbook -u $USER -v -l web_servers playbooks/deploy-app.yml --skip-tags deploy -D
 #
 # Run deploy tasks, copying release to server, etc.
 # Run this from the build server, from a user account with ssh access to the deploy account on the target machine.
 #
-#   ansible-playbook -u deploy -v -l web-servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
+#   ansible-playbook -u deploy -v -l web_servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
 
 - hosts: '*'
   become: true

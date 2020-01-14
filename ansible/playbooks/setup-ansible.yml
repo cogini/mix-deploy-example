@@ -1,7 +1,7 @@
 ---
 # Install Ansible on build system
 #
-# ansible-playbook -u $USER -v -l build-servers playbooks/setup-ansible.yml -D
+# ansible-playbook -u $USER -v -l build_servers playbooks/setup-ansible.yml -D
 
 - name: Install ansible
   hosts: '*'
@@ -12,6 +12,6 @@
       - paramiko
       - ansible
   vars_files:
-     - ../vars/build-{{ ansible_os_family }}.yml
+    - ../vars/build-{{ ansible_os_family }}.yml
   roles:
     - tools-other

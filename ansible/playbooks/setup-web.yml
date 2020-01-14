@@ -1,6 +1,7 @@
+---
 # Web system setup
 #
-# ansible-playbook -u $USER -v -l web-servers playbooks/setup-web.yml -D
+# ansible-playbook -u $USER -v -l web_servers playbooks/setup-web.yml -D
 
 # - name: Bootstrap Python 2
 #   hosts: debian-servers

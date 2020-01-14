@@ -2,10 +2,10 @@
 # Configure web
 #
 # Use encrypted values defined in ansible/inventory/group_vars/web-servers/secrets.yml
-# ansible-playbook --vault-password-file vault.key -u $USER -v -l web-servers playbooks/config-web.yml -D
+# ansible-playbook --vault-password-file vault.key -u $USER -v -l web_servers playbooks/config-web.yml -D
 #
 # Generate new values as a demo
-# ansible-playbook -u $USER -v -l web-servers playbooks/config-web.yml -D
+# ansible-playbook -u $USER -v -l web_servers playbooks/config-web.yml -D
 
 - name: Configure web
   hosts: '*'

@@ -1,6 +1,6 @@
 ---
 # Set up database
-# ansible-playbook -u $USER -v -l db-servers playbooks/setup-db.yml -D
+# ansible-playbook -u $USER -v -l db_servers playbooks/setup-db.yml -D
 
 - name: Install postgresql
   hosts: '*'
