@@ -101,6 +101,7 @@ config :mix_deploy,
     # System setup
     "create-users",
     "create-dirs",
+    "set-perms",
 
     # Local deploy
     "init-local",
@@ -180,6 +181,7 @@ Deploy the release to the local machine:
 ```shell
 # Extract release to target directory, creating current symlink
 bin/deploy-release
+sudo bin/deploy-set-perms
 
 # Run database migrations
 bin/deploy-migrate
