@@ -310,9 +310,34 @@ nodejs 10.15.3
 
 ## Add database migrations
 
-- Add `lib/mix_deploy_example/tasks/migrate.ex`
+- Add `lib/mix_deploy_example/release.ex` as described in
+  [Ecto migrations and custom commands](https://hexdocs.pm/phoenix/releases.html#ecto-migrations-and-custom-commands)
 
-- Add TOML lib to `mix.exs`
+## Add TOML config provider
+
+- Add to `mix.exs`
+
+```elixir
+defp deps do
+  [
+    {:toml_config, "~> 0.1.0"}, # Mix releases
+  ]
+end
+```
+
+```
+defp releases do
+  [
+    aws: [
+      include_executables_for: [:unix],
+      config_providers: [
+        {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
+      ],
+      steps: [:assemble, :tar]
+    ],
+  ]
+end
+```
 
 ## Add Ansible scripts
 
