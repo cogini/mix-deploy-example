@@ -74,6 +74,7 @@ config :phoenix, :serve_endpoints, true
 
 config :mix_systemd,
   # release_system: :distillery,
+  release_name: Mix.env(),
   dirs: [
     # Create /etc/mix-deploy-example
     :configuration,
@@ -101,7 +102,7 @@ config :mix_systemd,
 
 config :mix_deploy,
   # release_system: :distillery,
-  # release_name: Mix.env(),
+  release_name: Mix.env(),
   templates: [
     # Systemd wrappers
     "start",

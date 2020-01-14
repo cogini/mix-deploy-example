@@ -32,11 +32,10 @@ defmodule MixDeployExample.MixProject do
 
   defp releases do
     [
-      mix_deploy_example: [
+      aws: [
         include_executables_for: [:unix],
         config_providers: [
           {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
-          # {TomlConfigProvider, path: "/srv/mix-deploy-example/etc/config.toml"}
         ],
         steps: [:assemble, :tar]
       ],
@@ -52,11 +51,10 @@ defmodule MixDeployExample.MixProject do
   defp deps do
     [
       {:distillery, "~> 2.1"},
-      # {:distillery, "~> 2.0"},
       {:ecto_sql, "~> 3.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      # {:mix_deploy, "~> 0.7.0"},
+      # {:mix_deploy, "~> 0.7"},
       {:mix_deploy, github: "cogini/mix_deploy", branch: "master"},
       # {:mix_systemd, github: "cogini/mix_systemd", override: true},
       {:phoenix, "~> 1.4.6"},

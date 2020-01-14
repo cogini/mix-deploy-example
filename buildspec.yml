@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    MIX_ENV: "prodaws"
+    MIX_ENV: "aws"
 
 # https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
 phases:
