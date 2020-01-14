@@ -7,8 +7,8 @@ This is a working example Elixir app which shows how to deploy using
 `mix_deploy` generates scripts which are used to deploy your app using systemd
 on a server. It includes scripts to set up the initial system, deploy
 code and handle configuration during startup. It uses
-[mix_systemd](https://github.com/cogini/mix_systemd) to generate a
-corresponding systemd unit file.
+[mix_systemd](https://github.com/cogini/mix_systemd) to generate systemd unit
+files.
 
 # Deploying locally
 
@@ -63,7 +63,7 @@ DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db
 ## Initialize `mix_systemd` and `mix_deploy`
 
 Initialize the libraries, copying templates from `mix_systemd` and `mix_deploy` package dirs to `rel/templates`,
-then generate generate files based on the config in `config/prod.exs`:
+then generate files based on the config in `config/prod.exs`:
 
 ```shell
 mix systemd.init
@@ -74,7 +74,7 @@ MIX_ENV=prod mix deploy.generate
 chmod +x bin/*
 ```
 
-This sample gets environment vars from `/etc/mix-deploy-example/environment`:
+This example loads environment vars from `/etc/mix-deploy-example/environment`:
 
 ```elixir
 config :mix_systemd,
@@ -150,8 +150,8 @@ bin/deploy-enable
 `bin/deploy-copy-files` copies `config/environment` to `/etc/mix-deploy-example/environment`.
 `systemd` then loads it on startup, setting OS environment vars.
 
-Configure `config/prod.exs` to use `System.get_env/1` to read config from
-these environment vars:
+Configure `config/prod.exs` to use `System.get_env/2` to read config from
+the environment vars:
 
 ```elixir
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
@@ -224,7 +224,7 @@ Configure releases in `mix.exs`:
 ```elixir
 defp releases do
   [
-    mix_deploy_example: [
+    prod: [
       include_executables_for: [:unix],
       steps: [:assemble, :tar]
     ],
@@ -233,7 +233,7 @@ end
 ```
 
 Configure `rel/env.sh.eex` and `rel/vm.args.eex` if necessary, e.g.
-[increasing network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app/).
+to [increase network ports](https://www.cogini.com/blog/tuning-tcp-ports-for-your-phoenix-app/).
 
 See [the docs](https://hexdocs.pm/mix/Mix.Tasks.Release.html) for more details.
 
@@ -242,14 +242,14 @@ See [the docs](https://hexdocs.pm/mix/Mix.Tasks.Release.html) for more details.
 Add libraries to deps from Hex:
 
 ```elixir
-{:mix_deploy, "~> 0.7.0"}
+{:mix_deploy, "~> 0.7"}
 ```
 
 Add `rel/templates` and `bin/deploy-*` to `.gitignore`.
 
 ## Copy build and utility scripts
 
-Copy these scripts from the `bin/` directory to the `bin/` directory of your project.
+Copy scripts from the `bin/` directory to the `bin/` directory of your project.
 
 These scripts install the required dependencies:
 
@@ -315,6 +315,8 @@ nodejs 10.15.3
 - Add TOML lib to `mix.exs`
 
 ## Add Ansible scripts
+
+See `ansible` dir.
 
 ## Add Docker file
 

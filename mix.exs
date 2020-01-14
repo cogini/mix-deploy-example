@@ -32,6 +32,10 @@ defmodule MixDeployExample.MixProject do
 
   defp releases do
     [
+      prod: [
+        include_executables_for: [:unix],
+        steps: [:assemble, :tar]
+      ],
       aws: [
         include_executables_for: [:unix],
         config_providers: [
@@ -39,9 +43,6 @@ defmodule MixDeployExample.MixProject do
         ],
         steps: [:assemble, :tar]
       ],
-      prod: [
-        include_executables_for: [:unix]
-      ]
     ]
   end
 
