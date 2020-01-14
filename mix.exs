@@ -56,7 +56,7 @@ defmodule MixDeployExample.MixProject do
       {:jason, "~> 1.0"},
       # {:mix_deploy, "~> 0.7"},
       {:mix_deploy, github: "cogini/mix_deploy", branch: "master"},
-      # {:mix_systemd, github: "cogini/mix_systemd", override: true},
+      {:mix_systemd, github: "cogini/mix_systemd", override: true},
       {:phoenix, "~> 1.4.6"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.11"},
