@@ -11,14 +11,10 @@ use Mix.Config
 # before starting your production server.
 
 config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
+  http: [:inet6, port: 4000],
   # url: [host: {:system, "HOST"}, port: 80],
   # static_url: [host: System.get_env("ASSETS_HOST"), port: 443],
-  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
-
-config :mix_deploy_example, MixDeployExample.Repo,
-  url: System.get_env("DATABASE_URL")
 
 # Do not print debug messages in production
 config :logger, level: :info
