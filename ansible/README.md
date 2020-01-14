@@ -1,6 +1,6 @@
 # Setting up servers using Ansible
 
-This document tells how to set up a server to run a Phoenix app using
+This document describes how to set up a server to run a Phoenix app using
 [Ansible](https://www.ansible.com/).
 
 # Install Ansible
@@ -8,7 +8,7 @@ This document tells how to set up a server to run a Phoenix app using
 On your local dev machine, install Ansible:
 
 ```shell
-pip install ansible
+python -m pip install ansible
 ```
 
 # Configure SSH
@@ -20,16 +20,18 @@ its name.
     Host web-server
         HostName 123.45.67.89
 
-You can use any name you like, but it needs to match `ansible/inventory/hosts`.
+You can use any name you like, but it needs to match `ansible/inventory/hosts.yml`.
+For larger projects, we normally keep a shared `ssh.config` file in the source.
+See `ansible.cfg`.
 
 ## Configure settings for the app
 
 For security, we use separate accounts to deploy the app and to run it.
 
 The deploy account owns the code and config files, and has rights
-to restart the app. We normally use a separate account called `deploy`.
+to restart the app. We normally use a OS account called `deploy`.
 
-The app runs under a separate account with the minimum permissions it needs.
+The app runs under an OS account with the minimum permissions it needs.
 We normally create a name matching the app, e.g. `foo` or use a generic name
 like `app`.
 
