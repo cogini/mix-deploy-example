@@ -138,14 +138,12 @@ config :mix_deploy,
 Set up the local system for the app, creating users, directories, etc:
 
 ```shell
-sudo bin/deploy-init-local
-```
-
-This runs:
-
-```shell
 bin/deploy-create-users
 bin/deploy-create-dirs
+
+sudo mkdir -p /etc/mix-deploy-example
+sudo chmod 750 /etc/mix-deploy-example
+sudo chown deploy:app /etc/mix-deploy-example
 
 cp bin/* /srv/mix-deploy-example/bin
 
