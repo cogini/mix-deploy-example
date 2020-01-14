@@ -84,13 +84,9 @@ This example loads environment vars from `/etc/mix-deploy-example/environment`:
 
 ```elixir
 config :mix_systemd,
-  dirs: [
-    # Create /etc/mix-deploy-example dir
-    :configuration,
-  ],
   env_files: [
     # Load environment vars from /etc/mix-deploy-example/environment
-    ["-", :configuration_dir, "/environment"],
+    ["-", :deploy_dir, "/etc/environment"],
   ]
 
 config :mix_deploy,
@@ -119,13 +115,13 @@ config :mix_deploy,
   ],
   # This should match mix_systemd
   env_files: [
-    ["-", :configuration_dir, "/environment"],
+    ["-", :deploy_dir, "/etc/environment"],
   ],
-  # Have deploy-copy-files copy config/environment to /etc/mix-deploy-example
+  # Have deploy-copy-files copy config/environment to /srv/mix-deploy-example/etc
   copy_files: [
     %{
       src: "config/environment",
-      dst: :configuration_dir,
+      dst: [:deploy_dir, "/etc/environment],
       user: "$DEPLOY_USER",
       group: "$APP_GROUP",
       mode: "640"
@@ -137,11 +133,9 @@ config :mix_deploy,
 
 Set up the local system for the app, creating users, directories, etc:
 
-```shell
 sudo bin/deploy-init-local
-```
 
-This runs:
+THat does the following:
 
 ```shell
 bin/deploy-create-users
@@ -153,7 +147,7 @@ bin/deploy-copy-files
 bin/deploy-enable
 ```
 
-`bin/deploy-copy-files` copies `config/environment` to `/etc/mix-deploy-example/environment`.
+`bin/deploy-copy-files` copies `config/environment` to `/srv/mix-deploy-example/environment/etc`.
 `systemd` then loads it on startup, setting OS environment vars.
 
 Configure `config/releases.exs` to use `System.get_env/2` to read config from
