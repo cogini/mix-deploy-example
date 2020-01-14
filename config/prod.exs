@@ -125,7 +125,7 @@ config :mix_deploy,
   copy_files: [
     %{
       src: "config/environment",
-      dst: [:deploy_dir, "/etc/environment],
+      dst: [:deploy_dir, "/etc/environment"],
       user: "$DEPLOY_USER",
       group: "$APP_GROUP",
       mode: "640"
