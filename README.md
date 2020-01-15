@@ -37,50 +37,12 @@ LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-ubuntu && bin/build-install-as
 LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-centos && bin/build-install-asdf-init
 ```
 
-We normally use ASDF, but compiling from source on a small server takes a while.
+We normally use ASDF, but compiling from source on a small server takes a while
+and may run out of RAM.
 
 ## Configure
 
-Set up your production db password and `secret_key_base`, used by Phoenix to protect
-session cookies.
-
-Generate `secret_key_base`:
-
-```shell
-mix phx.gen.secret 64
-```
-
-Create a database using
-[Digital Ocean's Managed Databases Service](https://www.cogini.com/blog/multiple-databases-with-digital-ocean-managed-databases-service/).
-
-Create the file `config/environment` with app secrets:
-
-```shell
-SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4y"
-DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db.ondigitalocean.com:25060/defaultdb?ssl=true"
-```
-
-## Initialize `mix_systemd` and `mix_deploy`
-
-Initialize the libraries, copying templates from `mix_systemd` and `mix_deploy` package dirs to `rel/templates`,
-then generate files based on the config in `config/prod.exs`:
-
-```shell
-MIX_ENV=prod bin/build
-```
-
-That does the following:
-
-```
-mix systemd.init
-MIX_ENV=prod mix systemd.generate
-
-mix deploy.init
-MIX_ENV=prod mix deploy.generate
-chmod +x bin/*
-```
-
-This example loads environment vars from `/etc/mix-deploy-example/environment`:
+This example loads environment vars from `/srv/mix-deploy-example/etc/environment`:
 
 ```elixir
 config :mix_systemd,
@@ -130,6 +92,66 @@ config :mix_deploy,
   ]
 ```
 
+Set up your production db password and `secret_key_base`, used by Phoenix to protect
+session cookies.
+
+Generate `secret_key_base`:
+
+```shell
+mix phx.gen.secret 64
+```
+
+Create a database using
+[Digital Ocean's Managed Databases Service](https://www.cogini.com/blog/multiple-databases-with-digital-ocean-managed-databases-service/)
+and get the database connection URL.
+
+Create the file `config/environment` with app secrets:
+
+```shell
+SECRET_KEY_BASE="EOdJB1T39E5Cdeebyc8naNrOO4HBoyfdzkDy2I8Cxiq4mLvIQ/0tK12AK1ahrV4y"
+DATABASE_URL="ecto://doadmin:SECRET@db-postgresql-sfo2-xxxxx-do-user-yyyyyy-0.db.ondigitalocean.com:25060/defaultdb?ssl=true"
+```
+
+Add `config/environment` to `.gitignore`.
+
+`bin/deploy-copy-files` copies `config/environment` to `/srv/mix-deploy-example/environment/etc`.
+`systemd` then loads it on startup, setting OS environment vars.
+
+Configure `config/releases.exs` to use `System.get_env/2` to read config from
+the environment vars:
+
+```elixir
+config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
+  http: [:inet6, port: System.get_env("PORT") || 4000],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  cache_static_manifest: "priv/static/cache_manifest.json"
+
+config :mix_deploy_example, MixDeployExample.Repo,
+  url: System.get_env("DATABASE_URL")
+```
+
+## Build the system
+
+```shell
+MIX_ENV=prod bin/build
+```
+
+That does the following:
+
+```
+mix systemd.init
+MIX_ENV=prod mix systemd.generate
+
+mix deploy.init
+MIX_ENV=prod mix deploy.generate
+chmod +x bin/*
+```
+
+Initialize the libraries, copying templates from `mix_systemd` and `mix_deploy`
+package dirs to `rel/templates`, then generate files based on the config in
+`config/prod.exs`:
+
+
 ## Initialize the local system
 
 Set up the local system for the app, creating users, directories, etc:
@@ -148,23 +170,10 @@ bin/deploy-copy-files
 bin/deploy-enable
 ```
 
-`bin/deploy-copy-files` copies `config/environment` to `/srv/mix-deploy-example/environment/etc`.
-`systemd` then loads it on startup, setting OS environment vars.
-
-Configure `config/releases.exs` to use `System.get_env/2` to read config from
-the environment vars:
-
-```elixir
-config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
-  secret_key_base: System.get_env("SECRET_KEY_BASE"),
-  cache_static_manifest: "priv/static/cache_manifest.json"
-
-config :mix_deploy_example, MixDeployExample.Repo,
-  url: System.get_env("DATABASE_URL")
-```
-
 # Log out and log in again
+
+The `bin/deploy-create-users` adds the deploy user to the group used by the
+app. In order for that to take effect, you have to log out and log in again.
 
 ## Build
 
@@ -181,7 +190,7 @@ Deploy the release to the local machine:
 ```shell
 # Extract release to target directory, creating current symlink
 bin/deploy-release
-sudo bin/deploy-set-perms
+bin/deploy-set-perms
 
 # Run database migrations
 bin/deploy-migrate
