@@ -190,7 +190,7 @@ Deploy the release to the local machine:
 ```shell
 # Extract release to target directory, creating current symlink
 bin/deploy-release
-bin/deploy-set-perms
+sudo bin/deploy-set-perms
 
 # Run database migrations
 bin/deploy-migrate
