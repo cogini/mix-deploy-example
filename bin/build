@@ -41,7 +41,7 @@ echo "===> Installing node modules"
 # # (cd assets && node node_modules/brunch/bin/brunch build)
 # # (cd assets && node node_modules/webpack/bin/webpack.js --mode development)
 # (cd assets && node node_modules/webpack/bin/webpack.js --mode production)
-(cd assets && npm run deploy)
+npm run deploy --prefix ./assets
 
 echo "Building digest files"
 mix phx.digest
