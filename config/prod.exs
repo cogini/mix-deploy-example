@@ -71,9 +71,25 @@ config :phoenix, :serve_endpoints, true
 config :mix_systemd,
   # release_system: :distillery,
   release_name: Mix.env(),
+  dirs: [
+    # Create /etc/mix-deploy-example
+    #:configuration,
+    # Create /run/mix-deploy-example
+    :runtime,
+  ],
+  # Don't clear runtime dir between restarts, useful for debugging
+  runtime_directory_preserve: "yes",
   env_files: [
     # Load environment vars from /srv/mix-deploy-example/etc/environment
     ["-", :deploy_dir, "/etc/environment"],
+  ],
+  env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    # Mix
+    ["RELEASE_TMP=", :runtime_dir],
+    # Distillery
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
   ],
   app_user: "app",
   app_group: "app"
@@ -121,6 +137,21 @@ config :mix_deploy,
   # This should match mix_systemd
   env_files: [
     ["-", :deploy_dir, "/etc/environment"],
+  ],
+  # This should match mix_systemd
+  env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    # Mix
+    ["RELEASE_TMP=", :runtime_dir],
+    # Distillery
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
+  ],
+  dirs: [
+    # Create /etc/mix-deploy-example
+    #:configuration,
+    # Create /run/mix-deploy-example
+    :runtime,
   ],
   # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
   copy_files: [
