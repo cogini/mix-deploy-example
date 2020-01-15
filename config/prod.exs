@@ -122,6 +122,7 @@ config :mix_deploy,
   env_files: [
     ["-", :deploy_dir, "/etc/environment"],
   ],
+  # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
   copy_files: [
     %{
       src: "config/environment",

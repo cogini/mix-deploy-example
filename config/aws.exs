@@ -128,6 +128,7 @@ config :mix_deploy,
     # System setup
     "create-users",
     "create-dirs",
+    "set-perms",
 
     # Local deploy
     # "init-local",
@@ -138,7 +139,6 @@ config :mix_deploy,
     # CodeDeploy
     "clean-target",
     "extract-release",
-    "set-perms",
 
     # CodeBuild
     "stage-files",
