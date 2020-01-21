@@ -89,9 +89,9 @@ config :mix_systemd,
   # Run scripts before starting the app
   exec_start_pre: [
     # Sync config from S3 bucket to /etc
-    ["!", :deploy_dir, "/bin/deploy-sync-config-s3"]
+    ["!", :deploy_dir, "/bin/deploy-sync-config-s3"],
     # Run db migrations
-    [:deploy_dir, "/bin/deploy-migrate"]
+    [:deploy_dir, "/bin/deploy-migrate"],
   ],
   dirs: [
     # Create /etc/mix-deploy-example
