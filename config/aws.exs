@@ -86,9 +86,12 @@ config :phoenix, :serve_endpoints, true
 config :mix_systemd,
   # release_system: :distillery,
   release_name: Mix.env(),
-  # Run script before starting app to sync config from S3 bucket to /etc
+  # Run scripts before starting the app
   exec_start_pre: [
+    # Sync config from S3 bucket to /etc
     ["!", :deploy_dir, "/bin/deploy-sync-config-s3"]
+    # Run db migrations
+    [:deploy_dir, "/bin/deploy-migrate"]
   ],
   dirs: [
     # Create /etc/mix-deploy-example
