@@ -73,7 +73,7 @@ config :mix_systemd,
   release_name: Mix.env(),
   dirs: [
     # Create /etc/mix-deploy-example
-    #:configuration,
+    # :configuration,
     # Create /run/mix-deploy-example
     :runtime,
   ],
