@@ -46,13 +46,25 @@ This example loads environment vars from `/srv/mix-deploy-example/etc/environmen
 
 ```elixir
 config :mix_systemd,
+  # Run scripts before starting the app
+  exec_start_pre: [
+    # Run db migrations
+    [:deploy_dir, "/bin/deploy-migrate"],
+  ],
+  dirs: [
+    # Create /run/mix-deploy-example
+    :runtime,
+  ],
   env_files: [
-    # Load environment vars from /etc/mix-deploy-example/environment
+    # Load environment vars from /srv/mix-deploy-example/etc/environment
     ["-", :deploy_dir, "/etc/environment"],
+  ],
+  env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    ["RELEASE_TMP=", :runtime_dir],
   ]
 
 config :mix_deploy,
-  # List of scripts to generate
   templates: [
     # Systemd wrappers
     "start",
@@ -80,11 +92,20 @@ config :mix_deploy,
   env_files: [
     ["-", :deploy_dir, "/etc/environment"],
   ],
-  # Have deploy-copy-files copy config/environment to /srv/mix-deploy-example/etc
+  # This should match mix_systemd
+  env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    ["RELEASE_TMP=", :runtime_dir],
+  ],
+  dirs: [
+    # Create /run/mix-deploy-example
+    :runtime,
+  ],
+  # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
   copy_files: [
     %{
       src: "config/environment",
-      dst: [:deploy_dir, "/etc/environment],
+      dst: [:deploy_dir, "/etc/environment"],
       user: "$DEPLOY_USER",
       group: "$APP_GROUP",
       mode: "640"
