@@ -85,7 +85,7 @@ config :mix_systemd,
     :runtime,
   ],
   # Don't clear runtime dir between restarts, useful for debugging
-  runtime_directory_preserve: "yes",
+  # runtime_directory_preserve: "yes",
   env_files: [
     # Load environment vars from /srv/mix-deploy-example/etc/environment
     ["-", :deploy_dir, "/etc/environment"],

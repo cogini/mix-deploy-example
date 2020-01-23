@@ -38,7 +38,7 @@ LANG=en_US.UTF-8 sudo bin/build-install-asdf-deps-centos && bin/build-install-as
 ```
 
 We normally use ASDF, but compiling from source on a small server takes a while
-and may run out of RAM.
+and may run out of RAM unless you adjust the config.
 
 ## Configure
 
@@ -48,11 +48,11 @@ This example loads environment vars from `/srv/mix-deploy-example/etc/environmen
 config :mix_systemd,
   # Run scripts before starting the app
   exec_start_pre: [
-    # Run db migrations
+    # Run db migrations script /srv/mix-deploy-example/bin/deploy-migrate
     [:deploy_dir, "/bin/deploy-migrate"],
   ],
   dirs: [
-    # Create /run/mix-deploy-example
+    # Create runtime temp dir /run/mix-deploy-example
     :runtime,
   ],
   env_files: [
@@ -61,12 +61,14 @@ config :mix_systemd,
   ],
   env_vars: [
     # Tell release scripts to use runtime directory for temp files
+    # Needed by config/releases.exs
     ["RELEASE_TMP=", :runtime_dir],
   ]
 
 config :mix_deploy,
+  # Generate these scripts from templates
   templates: [
-    # Systemd wrappers
+    # systemctl wrappers
     "start",
     "stop",
     "restart",
@@ -88,17 +90,15 @@ config :mix_deploy,
     "remote-console",
     "migrate",
   ],
-  # This should match mix_systemd
+  # Match mix_systemd
   env_files: [
     ["-", :deploy_dir, "/etc/environment"],
   ],
-  # This should match mix_systemd
   env_vars: [
     # Tell release scripts to use runtime directory for temp files
     ["RELEASE_TMP=", :runtime_dir],
   ],
   dirs: [
-    # Create /run/mix-deploy-example
     :runtime,
   ],
   # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
@@ -172,7 +172,6 @@ Initialize the libraries, copying templates from `mix_systemd` and `mix_deploy`
 package dirs to `rel/templates`, then generate files based on the config in
 `config/prod.exs`:
 
-
 ## Initialize the local system
 
 Set up the local system for the app, creating users, directories, etc:
@@ -212,11 +211,14 @@ Deploy the release to the local machine:
 # Extract release to target directory, creating current symlink
 bin/deploy-release
 
-# Run database migrations
-bin/deploy-migrate
-
 # Restart the systemd unit
 sudo bin/deploy-restart
+```
+
+Check the status:
+```shell
+systemctl status mix-deploy-example
+journalctl -f -u mix-deploy-example
 ```
 
 ## Test
