@@ -71,14 +71,21 @@ config :phoenix, :serve_endpoints, true
 config :mix_systemd,
   # release_system: :distillery,
   release_name: Mix.env(),
+  # Run scripts before starting the app
+  exec_start_pre: [
+    # Sync config from S3 bucket to /etc
+    # ["!", :deploy_dir, "/bin/deploy-sync-config-s3"],
+    # Run db migrations
+    [:deploy_dir, "/bin/deploy-migrate"],
+  ],
   dirs: [
     # Create /etc/mix-deploy-example
-    #:configuration,
+    # :configuration,
     # Create /run/mix-deploy-example
     :runtime,
   ],
   # Don't clear runtime dir between restarts, useful for debugging
-  runtime_directory_preserve: "yes",
+  # runtime_directory_preserve: "yes",
   env_files: [
     # Load environment vars from /srv/mix-deploy-example/etc/environment
     ["-", :deploy_dir, "/etc/environment"],
@@ -149,7 +156,7 @@ config :mix_deploy,
   ],
   dirs: [
     # Create /etc/mix-deploy-example
-    #:configuration,
+    # :configuration,
     # Create /run/mix-deploy-example
     :runtime,
   ],

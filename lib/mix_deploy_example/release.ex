@@ -18,6 +18,10 @@ defmodule MixDeployExample.Release do
   end
 
   defp repos do
+    for app <- [:crypto, :ssl, :postgrex, :ecto, :ecto_sql] do
+      {:ok, res} = Application.ensure_all_started(app)
+      IO.puts("==> Started #{app}: #{inspect(res)}")
+    end
     Application.load(@app)
     Application.fetch_env!(@app, :ecto_repos)
   end
