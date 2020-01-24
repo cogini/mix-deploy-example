@@ -104,6 +104,35 @@ config :mix_systemd,
 config :mix_deploy,
   # release_system: :distillery,
   release_name: Mix.env(),
+  # This should match mix_systemd
+  env_files: [
+    ["-", :deploy_dir, "/etc/environment"],
+  ],
+  # This should match mix_systemd
+  env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    # Mix
+    ["RELEASE_TMP=", :runtime_dir],
+    # Distillery
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
+  ],
+  dirs: [
+    # Create /etc/mix-deploy-example
+    # :configuration,
+    # Create /run/mix-deploy-example
+    :runtime,
+  ],
+  # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
+  copy_files: [
+    %{
+      src: "config/environment",
+      dst: [:deploy_dir, "/etc/environment"],
+      user: "$DEPLOY_USER",
+      group: "$APP_GROUP",
+      mode: "640"
+    },
+  ],
   templates: [
     # Systemd wrappers
     "start",
@@ -140,35 +169,6 @@ config :mix_deploy,
     # "runtime-environment-file",
     # "runtime-environment-wrap",
     # "set-cookie-ssm",
-  ],
-  # This should match mix_systemd
-  env_files: [
-    ["-", :deploy_dir, "/etc/environment"],
-  ],
-  # This should match mix_systemd
-  env_vars: [
-    # Tell release scripts to use runtime directory for temp files
-    # Mix
-    ["RELEASE_TMP=", :runtime_dir],
-    # Distillery
-    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
-    # "REPLACE_OS_VARS=true",
-  ],
-  dirs: [
-    # Create /etc/mix-deploy-example
-    # :configuration,
-    # Create /run/mix-deploy-example
-    :runtime,
-  ],
-  # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
-  copy_files: [
-    %{
-      src: "config/environment",
-      dst: [:deploy_dir, "/etc/environment"],
-      user: "$DEPLOY_USER",
-      group: "$APP_GROUP",
-      mode: "640"
-    },
   ],
   app_user: "app",
   app_group: "app"

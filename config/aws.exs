@@ -121,6 +121,20 @@ config :mix_systemd,
 config :mix_deploy,
   # release_system: :distillery,
   release_name: Mix.env(),
+  # This should match mix_systemd
+  env_files: [
+    ["-", :deploy_dir, "/etc/environment"],
+    ["-", :configuration_dir, "/environment"],
+  ],
+  # This should match mix_systemd
+  env_vars: [
+    # Tell release scripts to use runtime directory for temp files
+    # Mix
+    ["RELEASE_TMP=", :runtime_dir],
+    # Distillery
+    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
+    # "REPLACE_OS_VARS=true",
+  ],
   templates: [
     # Systemd wrappers
     "start",
@@ -157,20 +171,6 @@ config :mix_deploy,
     # "runtime-environment-file",
     # "runtime-environment-wrap",
     # "set-cookie-ssm",
-  ],
-  # This should match mix_systemd
-  env_files: [
-    ["-", :deploy_dir, "/etc/environment"],
-    ["-", :configuration_dir, "/environment"],
-  ],
-  # This should match mix_systemd
-  env_vars: [
-    # Tell release scripts to use runtime directory for temp files
-    # Mix
-    ["RELEASE_TMP=", :runtime_dir],
-    # Distillery
-    # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
-    # "REPLACE_OS_VARS=true",
   ],
   app_user: "app",
   app_group: "app"
