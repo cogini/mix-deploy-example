@@ -157,7 +157,7 @@ config :mix_deploy_example, MixDeployExample.Repo,
 MIX_ENV=prod bin/build
 ```
 
-That does the following:
+In addition to the normal build stuff, that does the following:
 
 ```
 mix systemd.init
