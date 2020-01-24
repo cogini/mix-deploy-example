@@ -55,12 +55,12 @@ Put this in `ansible/playbooks/deploy-app.yml`.
 First, set up the target machine, e.g. installing packages and creating directories.
 Run this from your dev machine, specifying a user with sudo permissions:
 
-    ansible-playbook -u $USER -v -l web-servers playbooks/deploy-app.yml --skip-tags deploy -D
+    ansible-playbook -u $USER -v -l web_servers playbooks/deploy-app.yml --skip-tags deploy -D
 
 Next, deploy the code. Run this from the build server, from a user account with
 ssh access to the deploy account on the target machine:
 
-    ansible-playbook -u deploy -v -l web-servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
+    ansible-playbook -u deploy -v -l web_servers playbooks/deploy-app.yml --tags deploy --extra-vars ansible_become=false -D
 
 A more heaviliy customized playbook:
 
@@ -95,6 +95,10 @@ A more heaviliy customized playbook:
 
 # Role Variables
 
+System used to build releases, either "mix" or "distillery".
+
+    elixir_release_release_system: "mix"
+
 Location of app to get release files. By default, it assumes that you have an `ansible` directory
 in your app source
 
@@ -104,6 +108,10 @@ Erlang name of the application, used to by Distillery to name directories
 and scripts.
 
     elixir_release_app_name: my_app
+
+Name of release, by default `app_name`, but often MIX_ENV.
+
+    elixir_release_release_name: "{{ elixir_release_app_name }}"
 
 External name of the app, used to name the systemd service and directories.
 By default, it converts underscores to dashes:
@@ -203,8 +211,8 @@ Options are:
 
 Which users are allowed to restart the app using `sudo /bin/systemctl restart` when method == `systemctl`.
 
-  elixir_release_restart_users:
-   - "{{ elixir_release_deploy_user }}"
+    elixir_release_restart_users:
+        - "{{ elixir_release_deploy_user }}"
 
 Set to `[]` and nobody can restart, or add additional names, e.g. `- "{{ elixir_release_app_user }}"`.
 
@@ -261,13 +269,15 @@ Target systemd version, used to enable more advanced features:
 
     elixir_release_systemd_version: 219
 
-Systemd service type:
+Systemd service type: simple | exec | notify | forking
+See systemd [Type](https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=)
 
     elixir_release_service_type: simple
 
-Start command:
+Release command to execute to start app. mix uses start for simple, daemon for forking.
+distilery uses foreground for simple, start for forking.
 
-    elixir_release_start_command: foreground
+    elixir_release_start_command: start
 
 PID file when using forking service type:
 

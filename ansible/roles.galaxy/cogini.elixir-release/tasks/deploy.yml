@@ -25,9 +25,17 @@
 
   when: elixir_release_version is not defined
 
-- name: Get local release file
-  set_fact:
-    elixir_release_local_release_file: "{{ elixir_release_local_dir }}/{{ elixir_release_version }}/{{ elixir_release_app_name }}.tar.gz"
+- block:
+  - name: Get local release file
+    set_fact:
+      elixir_release_local_release_file: "{{ elixir_release_src_dir }}/_build/{{ elixir_release_mix_env }}/{{ elixir_release_release_name }}-{{ elixir_release_version }}.tar.gz"
+  when: elixir_release_release_system == "mix"
+
+- block:
+  - name: Get local release file
+    set_fact:
+      elixir_release_local_release_file: "{{ elixir_release_local_dir }}/{{ elixir_release_version }}/{{ elixir_release_release_name }}.tar.gz"
+  when: elixir_release_release_system == "distillery"
 
 - name: Create releases dir
   file:
@@ -51,20 +59,23 @@
       cmd: mv "{{ elixir_release_current_dir }}" "{{ elixir_release_current_dir }}.old"
       creates: "{{ elixir_release_current_dir }}.old"
       removes: "{{ elixir_release_current_dir }}"
-    when: current.stat.islnk is defined and current.stat.islnk
+    when: (current.stat.islnk is defined and current.stat.islnk) or (current.stat.exists and current.stat.isdir)
 
   - name: Create current symlink
     file: src={{ elixir_release_releases_dir }}/{{ elixir_release_timestamp }} dest={{ elixir_release_current_dir }} state=link
 
+  - name: Set permissions on release files so app can access them
+    # file:
+    #   path: "{{ item }}"
+    #   owner: "{{ elixir_release_deploy_user }}"
+    #   group: "{{ elixir_release_app_group }}"
+    #   recurse: "yes"
+    #   path: "{{ elixir_release_current_dir }}"
+    # recurse doesn't work on symlinks
+    command: find -H {{ elixir_release_current_dir }} -exec chown {{ elixir_release_deploy_user }}:{{ elixir_release_app_group }} {} \;
+
   - name: Set permissions on release scripts so app can run them
-    file:
-      path: "{{ item }}"
-      owner: "{{ elixir_release_deploy_user }}"
-      group: "{{ elixir_release_app_group }}"
-      mode: 0750
-    with_items:
-      - "{{ elixir_release_current_dir }}/bin/{{ elixir_release_app_name }}"
-      - "{{ elixir_release_current_dir }}/releases/{{ elixir_release_version }}/{{ elixir_release_app_name }}.sh"
+    command: find -H {{ elixir_release_current_dir }} -executable -type f -exec chmod g+x {} \;
 
   when: not ansible_check_mode
 

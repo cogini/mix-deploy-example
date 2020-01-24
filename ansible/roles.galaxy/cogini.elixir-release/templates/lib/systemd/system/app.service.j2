@@ -13,8 +13,8 @@ WorkingDirectory={{ elixir_release_deploy_dir }}
 {% for command in elixir_release_exec_start_pre %}
 ExecStartPre={{ command }}
 {% endfor %}
-ExecStart={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_app_name }} {{ elixir_release_start_command }}
-ExecStop={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_app_name }} stop
+ExecStart={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_release_name }} {{ elixir_release_start_command }}
+ExecStop={{ elixir_release_deploy_dir }}/current/bin/{{ elixir_release_release_name }} stop
 Environment=LANG={{ elixir_release_lang }}
 Environment=MIX_ENV={{ elixir_release_mix_env }}
 Environment=RELEASE_MUTABLE_DIR={{ elixir_release_runtime_dir }}
