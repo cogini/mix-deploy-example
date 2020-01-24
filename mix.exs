@@ -26,7 +26,7 @@ defmodule MixDeployExample.MixProject do
     ]
   end
 
-  # Specifies which paths to compile per environment.
+  # Paths to compile per environment
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
@@ -34,14 +34,14 @@ defmodule MixDeployExample.MixProject do
     [
       prod: [
         include_executables_for: [:unix],
-        steps: [:assemble, :tar]
+        steps: [:assemble, :tar],
       ],
       aws: [
         include_executables_for: [:unix],
+        steps: [:assemble, :tar],
         config_providers: [
           {TomlConfigProvider, path: "/etc/mix-deploy-example/config.toml"}
         ],
-        steps: [:assemble, :tar]
       ],
     ]
   end
