@@ -4,7 +4,7 @@
 
 set -e
 
-export LANG="${LANG:-C.UTF-8}"
+export LANG="${LANG:-"en_US.UTF-8"}"
 export MIX_ENV="${MIX_ENV:-prod}"
 
 CURDIR="$PWD"
@@ -61,3 +61,4 @@ echo "===> Building release"
 mix release --overwrite "$MIX_ENV"
 # Distillery
 # mix distillery.release
+# mix distillery.release --verbose
