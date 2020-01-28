@@ -32,8 +32,10 @@ fi
 if [ ! -d "$ASDF_DIR/plugins/nodejs" ]; then
     echo "===> Installing ASDF nodejs plugin"
     asdf plugin-add nodejs
+fi
 
-    echo "===> Importing Node.js release team OpenPGP keys to main keyring"
+if [ ! -d "~/.gnupg" ]; then
+    echo "===> Importing Node.js release team OpenPGP keys"
     # This can be flaky
     bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
 fi
