@@ -1,3 +1,4 @@
 erlang 22.2
-elixir 1.9.4
-nodejs 10.15.3
+elixir 1.10.0
+# nodejs 10.15.3
+nodejs 13.7.0
