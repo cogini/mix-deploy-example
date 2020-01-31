@@ -23,6 +23,6 @@ mix compile
 
 echo "===> Running mix test"
 mix test
-# mix test --exclude redis
-# mix dialyzer
-# mix credo
+# mix format --check-formatted
+# mix credo --
+# mix dialyzer --halt-exit-status
