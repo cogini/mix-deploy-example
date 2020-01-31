@@ -15,6 +15,7 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
     app_env = [{@app, Application.get_all_env(@app)}]
 
     config_exs = Path.join(config_dir, "config.exs")
+
     app_env =
       if File.exists?(config_exs) do
         IO.puts("==> Loading config file #{config_exs}")
@@ -24,12 +25,13 @@ defmodule MixDeployExample.ReleaseTasks.Migrate do
       end
 
     config_toml = Path.join(config_dir, "config.toml")
+
     app_env =
       if File.exists?(config_toml) do
         IO.puts("==> Loading config file #{config_toml}")
         TomlConfigProvider.load(app_env, config_toml)
       else
-          app_env
+        app_env
       end
 
     repo_config = app_env[@app][@repo_module]

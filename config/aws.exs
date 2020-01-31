@@ -19,7 +19,7 @@ config :mix_deploy_example, MixDeployExampleWeb.Endpoint,
     port: System.get_env("HTTPS_PORT") || 4001,
     cipher_suite: :strong,
     keyfile: "#{ssl_dir}/app-https.key",
-    certfile: "#{ssl_dir}/app-https.cert.pem",
+    certfile: "#{ssl_dir}/app-https.cert.pem"
     # cacertfile: "#{ssl_dir}/app-https.cacert.pem",
     # dhfile: "#{ssl_dir}/app-https.dh.pem",
   ],
@@ -91,13 +91,13 @@ config :mix_systemd,
     # Sync config from S3 bucket to /etc
     ["!", :deploy_dir, "/bin/deploy-sync-config-s3"],
     # Run db migrations
-    [:deploy_dir, "/bin/deploy-migrate"],
+    [:deploy_dir, "/bin/deploy-migrate"]
   ],
   dirs: [
     # Create /etc/mix-deploy-example
     :configuration,
     # Create /run/mix-deploy-example
-    :runtime,
+    :runtime
   ],
   # Don't clear runtime dir between restarts, useful for debugging
   # runtime_directory_preserve: "yes",
@@ -105,12 +105,12 @@ config :mix_systemd,
     # Load environment vars from /srv/mix-deploy-example/etc/environment
     ["-", :deploy_dir, "/etc/environment"],
     # Load environment vars from /etc/mix-deploy-example/environment
-    ["-", :configuration_dir, "/environment"],
+    ["-", :configuration_dir, "/environment"]
   ],
   env_vars: [
     # Tell release scripts to use runtime directory for temp files
     # Mix
-    ["RELEASE_TMP=", :runtime_dir],
+    ["RELEASE_TMP=", :runtime_dir]
     # Distillery
     # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
     # "REPLACE_OS_VARS=true",
@@ -124,13 +124,13 @@ config :mix_deploy,
   # This should match mix_systemd
   env_files: [
     ["-", :deploy_dir, "/etc/environment"],
-    ["-", :configuration_dir, "/environment"],
+    ["-", :configuration_dir, "/environment"]
   ],
   # This should match mix_systemd
   env_vars: [
     # Tell release scripts to use runtime directory for temp files
     # Mix
-    ["RELEASE_TMP=", :runtime_dir],
+    ["RELEASE_TMP=", :runtime_dir]
     # Distillery
     # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
     # "REPLACE_OS_VARS=true",
@@ -167,7 +167,7 @@ config :mix_deploy,
     "migrate",
 
     # Runtime environment
-    "sync-config-s3",
+    "sync-config-s3"
     # "runtime-environment-file",
     # "runtime-environment-wrap",
     # "set-cookie-ssm",

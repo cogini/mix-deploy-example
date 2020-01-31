@@ -76,24 +76,24 @@ config :mix_systemd,
     # Sync config from S3 bucket to /etc
     # ["!", :deploy_dir, "/bin/deploy-sync-config-s3"],
     # Run db migrations
-    [:deploy_dir, "/bin/deploy-migrate"],
+    [:deploy_dir, "/bin/deploy-migrate"]
   ],
   dirs: [
     # Create /etc/mix-deploy-example
     # :configuration,
     # Create /run/mix-deploy-example
-    :runtime,
+    :runtime
   ],
   # Don't clear runtime dir between restarts, useful for debugging
   # runtime_directory_preserve: "yes",
   env_files: [
     # Load environment vars from /srv/mix-deploy-example/etc/environment
-    ["-", :deploy_dir, "/etc/environment"],
+    ["-", :deploy_dir, "/etc/environment"]
   ],
   env_vars: [
     # Tell release scripts to use runtime directory for temp files
     # Mix
-    ["RELEASE_TMP=", :runtime_dir],
+    ["RELEASE_TMP=", :runtime_dir]
     # Distillery
     # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
     # "REPLACE_OS_VARS=true",
@@ -106,13 +106,13 @@ config :mix_deploy,
   release_name: Mix.env(),
   # This should match mix_systemd
   env_files: [
-    ["-", :deploy_dir, "/etc/environment"],
+    ["-", :deploy_dir, "/etc/environment"]
   ],
   # This should match mix_systemd
   env_vars: [
     # Tell release scripts to use runtime directory for temp files
     # Mix
-    ["RELEASE_TMP=", :runtime_dir],
+    ["RELEASE_TMP=", :runtime_dir]
     # Distillery
     # ["RELEASE_MUTABLE_DIR=", :runtime_dir],
     # "REPLACE_OS_VARS=true",
@@ -121,7 +121,7 @@ config :mix_deploy,
     # Create /etc/mix-deploy-example
     # :configuration,
     # Create /run/mix-deploy-example
-    :runtime,
+    :runtime
   ],
   # Copy config/environment from project to /etc/mix-deploy-example/etc/environment
   copy_files: [
@@ -131,7 +131,7 @@ config :mix_deploy,
       user: "$DEPLOY_USER",
       group: "$APP_GROUP",
       mode: "640"
-    },
+    }
   ],
   templates: [
     # Systemd wrappers
@@ -162,7 +162,7 @@ config :mix_deploy,
     # Release commands
     "set-env",
     "remote-console",
-    "migrate",
+    "migrate"
 
     # Runtime environment
     # "sync-config-s3",

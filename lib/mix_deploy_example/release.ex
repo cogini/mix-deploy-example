@@ -22,6 +22,7 @@ defmodule MixDeployExample.Release do
       {:ok, res} = Application.ensure_all_started(app)
       IO.puts("==> Started #{app}: #{inspect(res)}")
     end
+
     Application.load(@app)
     Application.fetch_env!(@app, :ecto_repos)
   end
