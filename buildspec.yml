@@ -31,15 +31,15 @@ phases:
       # - echo "CONFIG_S3_PREFIX=app/" >> rel/etc/environment
   build:
     commands:
-      # Build the app
-      - echo "Starting build"
+      - echo Build started on `date`
       # - source "$HOME/.asdf/asdf.sh"
       - chmod +x bin/test
-        # - MIX_ENV=test bin/test
+      # - MIX_ENV=test bin/test
       - chmod +x bin/build
       - bin/build
   post_build:
     commands:
+      - echo Build completed on `date`
       # Stage build files for CodeDeploy
       - chmod +x bin/deploy-stage-files
       - bin/deploy-stage-files
