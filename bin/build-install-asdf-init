@@ -19,17 +19,23 @@ fi
 
 source "$HOME/.asdf/asdf.sh"
 
-if [ ! -d "$ASDF_DIR/plugins/erlang" ]; then
+if [ -d "$ASDF_DIR/plugins/erlang" ]; then
+    asdf plugin-update erlang
+else
     echo "===> Installing ASDF erlang plugin"
     asdf plugin-add erlang
 fi
 
-if [ ! -d "$ASDF_DIR/plugins/elixir" ]; then
+if [ -d "$ASDF_DIR/plugins/elixir" ]; then
+    asdf plugin-update elixir
+else
     echo "===> Installing ASDF elixir plugin"
     asdf plugin-add elixir
 fi
 
-if [ ! -d "$ASDF_DIR/plugins/nodejs" ]; then
+if [ -d "$ASDF_DIR/plugins/nodejs" ]; then
+    asdf plugin-update nodejs
+else
     echo "===> Installing ASDF nodejs plugin"
     asdf plugin-add nodejs
 fi
