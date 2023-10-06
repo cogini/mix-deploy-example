@@ -64,34 +64,40 @@ ssh access to the deploy account on the target machine:
 
 A more heaviliy customized playbook:
 
-    - hosts: '*'
-      become: true
-      vars:
-        elixir_release_app_name: foo
-        elixir_release_app_user: bar
-        elixir_release_deploy_user: deploy
-        elixir_release_mix_env: public
-        elixir_release_base_dir: /opt/bar
-        elixir_release_app_dirs:
-          - configuration
-          - runtime
-          - logs
-          - tmp
-          - state
-          - cache
-        elixir_release_tmp_directory_base: /var/tmp/bar
-        elixir_release_state_directory_base: /var/bar
-        elixir_release_http_listen_port: 8080
-        elixir_release_cache_directory_mode: 0700
-        elixir_release_configuration_directory_mode: 0755
-        elixir_release_logs_directory_mode: 0755
-        elixir_release_state_directory_mode: 0755
-        elixir_release_tmp_directory_mode: 0755
-        elixir_release_sudoers_file: "{{ elixir_release_app_user }}-{{ elixir_release_service_name }}"
-        # Location of source app, assuming that the deploy scripts are in a separate repo in a parallel dir
-        elixir_release_src_dir: "{{ playbook_dir }}/../../../foo"
-      roles:
-        - cogini.elixir-release
+```yaml
+- hosts: '*'
+  become: true
+  vars:
+    elixir_release_app_name: foo
+    elixir_release_app_user: bar
+    elixir_release_deploy_user: deploy
+    elixir_release_mix_env: frontend
+    # elixir_release_release_name: "{{ elixir_release_mix_env }}"
+    # elixir_release_release_system: distillery
+    # elixir_release_start_command: foreground
+    elixir_release_systemd_source: mix_systemd
+    elixir_release_base_dir: /opt/bar
+    elixir_release_app_dirs:
+      - configuration
+      - runtime
+      - logs
+      - tmp
+      - state
+      - cache
+    elixir_release_tmp_directory_base: /var/tmp/bar
+    elixir_release_state_directory_base: /var/bar
+    elixir_release_http_listen_port: 8080
+    elixir_release_cache_directory_mode: 0700
+    elixir_release_configuration_directory_mode: 0755
+    elixir_release_logs_directory_mode: 0755
+    elixir_release_state_directory_mode: 0755
+    elixir_release_tmp_directory_mode: 0755
+    elixir_release_sudoers_file: "{{ elixir_release_app_user }}-{{ elixir_release_service_name }}"
+    # Location of source app, assuming that the deploy scripts are in a separate repo in a parallel dir
+    elixir_release_src_dir: "{{ playbook_dir }}/../../../foo"
+  roles:
+    - cogini.elixir-release
+```
 
 # Role Variables
 

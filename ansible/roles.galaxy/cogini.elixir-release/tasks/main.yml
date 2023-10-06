@@ -1,16 +1,16 @@
 ---
 # tasks file for app
 
-- include_tasks: dirs.yml
+- import_tasks: dirs.yml
   tags: ['dirs']
 
-- include_tasks: systemd.yml
+- import_tasks: systemd.yml
   tags: ['systemd']
 
-- include_tasks: scripts.yml
+- import_tasks: scripts.yml
   tags: ['scripts']
 
-# - include_tasks: config.yml
+# - import_tasks: config.yml
 #   become: true
 
 - import_tasks: deploy.yml
