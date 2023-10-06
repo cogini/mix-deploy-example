@@ -6,7 +6,7 @@
 - name: Set vars
   set_fact:
     # Location on local filesystem of release files
-    elixir_release_local_dir: "{{ elixir_release_src_dir }}/_build/{{ elixir_release_mix_env }}/rel/{{ elixir_release_app_name }}/releases"
+    elixir_release_local_dir: "{{ elixir_release_src_dir }}/_build/{{ elixir_release_mix_env }}/rel/{{ elixir_release_release_name }}/releases"
     # Name of target dir
     elixir_release_timestamp: "{{ ansible_date_time['iso8601_basic_short'] }}"
 
